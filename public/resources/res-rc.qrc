@@ -2,7 +2,6 @@
   <qresource prefix="icons">
     <file>icons/close.svg</file>
     <file>icons/cycle.svg</file>
-    <file>icons/defaultBg.svg</file>
     <file>icons/defaultImg.png</file>
     <file>icons/next.svg</file>
     <file>icons/play.svg</file>

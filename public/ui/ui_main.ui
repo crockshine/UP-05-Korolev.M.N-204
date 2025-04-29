@@ -6,18 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>856</width>
-    <height>528</height>
+    <width>1491</width>
+    <height>734</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background: radial-gradient(circle, #ff9a9e, #fad0c4);</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -35,11 +47,27 @@
     </property>
     <item>
      <widget class="QWidget" name="mainSection" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="styleSheet">
-       <string notr="true">background: url(:/icons/icons/defaultBg.svg);
- background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;</string>
+       <string notr="true">background: qlineargradient(
+    x1:0, y1:1, 
+    x2:1, y2:0, 
+    stop:0 #FF8080, 
+	 stop:0.5 white,
+ stop:0.5 white
+    stop:1 #72E4AB
+);</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -59,6 +87,12 @@
        </property>
        <item>
         <widget class="QWidget" name="whiteWrapper" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="styleSheet">
           <string notr="true">background: rgba(255,255,255,150);</string>
          </property>
@@ -154,7 +188,7 @@ border: none;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="res-rc.qrc">
+                <iconset resource="../resources/res-rc.qrc">
                  <normaloff>:/icons/icons/showHide.svg</normaloff>:/icons/icons/showHide.svg</iconset>
                </property>
                <property name="iconSize">
@@ -205,7 +239,7 @@ border: none;</string>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>300</width>
+                 <width>0</width>
                  <height>300</height>
                 </size>
                </property>
@@ -228,7 +262,7 @@ border: none;</string>
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="res-rc.qrc">:/icons/icons/defaultImg.png</pixmap>
+                <pixmap resource="../resources/res-rc.qrc">:/icons/icons/defaultImg.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -424,7 +458,7 @@ QSlider::handle:horizontal {
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset resource="res-rc.qrc">
+                   <iconset resource="../resources/res-rc.qrc">
                     <normaloff>:/icons/icons/random.svg</normaloff>:/icons/icons/random.svg</iconset>
                   </property>
                   <property name="iconSize">
@@ -458,7 +492,7 @@ QSlider::handle:horizontal {
                       <string/>
                      </property>
                      <property name="icon">
-                      <iconset resource="res-rc.qrc">
+                      <iconset resource="../resources/res-rc.qrc">
                        <normaloff>:/icons/icons/prev.svg</normaloff>:/icons/icons/prev.svg</iconset>
                      </property>
                      <property name="iconSize">
@@ -507,7 +541,7 @@ QSlider::handle:horizontal {
                       <string/>
                      </property>
                      <property name="icon">
-                      <iconset resource="res-rc.qrc">
+                      <iconset resource="../resources/res-rc.qrc">
                        <normaloff>:/icons/icons/play.svg</normaloff>:/icons/icons/play.svg</iconset>
                      </property>
                      <property name="iconSize">
@@ -544,7 +578,7 @@ QSlider::handle:horizontal {
                       <string/>
                      </property>
                      <property name="icon">
-                      <iconset resource="res-rc.qrc">
+                      <iconset resource="../resources/res-rc.qrc">
                        <normaloff>:/icons/icons/next.svg</normaloff>:/icons/icons/next.svg</iconset>
                      </property>
                      <property name="iconSize">
@@ -581,7 +615,7 @@ QSlider::handle:horizontal {
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset resource="res-rc.qrc">
+                   <iconset resource="../resources/res-rc.qrc">
                     <normaloff>:/icons/icons/cycle.svg</normaloff>:/icons/icons/cycle.svg</iconset>
                   </property>
                   <property name="iconSize">
@@ -630,53 +664,105 @@ QSlider::handle:horizontal {
        </property>
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="styleSheet">
+          <string notr="true">border: none</string>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>192</width>
-            <height>461</height>
+            <width>725</width>
+            <height>669</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_5"/>
+          <property name="styleSheet">
+           <string notr="true">border: none</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="cardList"/>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="addTrackButton">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="focusPolicy">
-          <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: black;
+       <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+        <widget class="QWidget" name="buttonLayout" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+           <widget class="QPushButton" name="addTrackButton">
+            <property name="minimumSize">
+             <size>
+              <width>250</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: black;
     color: white;
     border: none;</string>
-         </property>
-         <property name="text">
-          <string>Добавить трек</string>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
+            </property>
+            <property name="text">
+             <string>Добавить трек</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -686,7 +772,8 @@ QSlider::handle:horizontal {
   </widget>
  </widget>
  <resources>
-  <include location="res-rc.qrc"/>
+  <include location="../resources/res-rc.qrc"/>
+  <include location="../resources/res-rc.qrc"/>
  </resources>
  <connections/>
 </ui>
