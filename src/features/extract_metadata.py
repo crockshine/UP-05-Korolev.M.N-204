@@ -18,7 +18,6 @@ def extract_metadata(filepath: str) -> dict | None:
     default_artist = 'Автор не найден'
 
     metadata = {
-        'audio': audio,
         'title': default_title,
         'artist': default_artist,
         'cover': None

@@ -20,37 +20,52 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QPushButton,
 from public.resources import res_rc
 
 
-class Ui_TrackCard(object):
-    def setupUi(self, TrackCard):
-        if not TrackCard.objectName():
-            TrackCard.setObjectName(u"TrackCard")
-        TrackCard.resize(606, 100)
-        TrackCard.setMinimumSize(QSize(0, 100))
-        TrackCard.setMaximumSize(QSize(16777215, 100))
-        TrackCard.setStyleSheet(u"background: white")
-        self.horizontalLayout = QHBoxLayout(TrackCard)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.trackImage = QLabel(TrackCard)
+class Ui_TrackCardWrapper(object):
+    def setupUi(self, TrackCardWrapper):
+        if not TrackCardWrapper.objectName():
+            TrackCardWrapper.setObjectName(u"TrackCardWrapper")
+        TrackCardWrapper.resize(636, 120)
+        TrackCardWrapper.setMinimumSize(QSize(0, 0))
+        TrackCardWrapper.setMaximumSize(QSize(16777215, 120))
+        TrackCardWrapper.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        TrackCardWrapper.setStyleSheet(u"")
+        self.verticalLayout_2 = QVBoxLayout(TrackCardWrapper)
+        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.TrackCard = QWidget(TrackCardWrapper)
+        self.TrackCard.setObjectName(u"TrackCard")
+        self.TrackCard.setMaximumSize(QSize(16777215, 16777215))
+        self.TrackCard.setStyleSheet(u"border-bottom: 1px solid rgba(0,0,0,50);\n"
+"background: white\n"
+"")
+        self.horizontalLayout_2 = QHBoxLayout(self.TrackCard)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 10, 0, 10)
+        self.trackImage = QLabel(self.TrackCard)
         self.trackImage.setObjectName(u"trackImage")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.trackImage.sizePolicy().hasHeightForWidth())
         self.trackImage.setSizePolicy(sizePolicy)
-        self.trackImage.setMinimumSize(QSize(90, 90))
-        self.trackImage.setMaximumSize(QSize(90, 90))
-        self.trackImage.setStyleSheet(u"background: grey\n"
-"")
+        self.trackImage.setMinimumSize(QSize(65, 65))
+        self.trackImage.setMaximumSize(QSize(65, 65))
+        self.trackImage.setStyleSheet(u"border: none")
+        self.trackImage.setPixmap(QPixmap(u":/icons/icons/defaultImg.png"))
+        self.trackImage.setScaledContents(True)
 
-        self.horizontalLayout.addWidget(self.trackImage, 0, Qt.AlignmentFlag.AlignVCenter)
+        self.horizontalLayout_2.addWidget(self.trackImage, 0, Qt.AlignmentFlag.AlignVCenter)
 
-        self.infoBlock = QWidget(TrackCard)
+        self.infoBlock = QWidget(self.TrackCard)
         self.infoBlock.setObjectName(u"infoBlock")
         self.infoBlock.setMinimumSize(QSize(0, 50))
         self.infoBlock.setMaximumSize(QSize(16777215, 16777215))
+        self.infoBlock.setStyleSheet(u"border: none;\n"
+"border-radius: 0;\n"
+"color: black")
         self.verticalLayout = QVBoxLayout(self.infoBlock)
-        self.verticalLayout.setSpacing(4)
+        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.title = QLabel(self.infoBlock)
@@ -61,50 +76,57 @@ class Ui_TrackCard(object):
         sizePolicy1.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
         self.title.setSizePolicy(sizePolicy1)
         font = QFont()
-        font.setPointSize(18)
+        font.setPointSize(16)
         font.setBold(True)
         self.title.setFont(font)
+        self.title.setStyleSheet(u"")
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title.setWordWrap(True)
 
         self.verticalLayout.addWidget(self.title, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
-        self.author = QLabel(self.infoBlock)
-        self.author.setObjectName(u"author")
+        self.artist = QLabel(self.infoBlock)
+        self.artist.setObjectName(u"artist")
         font1 = QFont()
         font1.setPointSize(13)
-        self.author.setFont(font1)
-        self.author.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.author.setWordWrap(True)
+        self.artist.setFont(font1)
+        self.artist.setStyleSheet(u"")
+        self.artist.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.artist.setWordWrap(True)
 
-        self.verticalLayout.addWidget(self.author, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.verticalLayout.addWidget(self.artist, 0, Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
 
-        self.horizontalLayout.addWidget(self.infoBlock, 0, Qt.AlignmentFlag.AlignVCenter)
+        self.horizontalLayout_2.addWidget(self.infoBlock, 0, Qt.AlignmentFlag.AlignVCenter)
 
-        self.pushButton = QPushButton(TrackCard)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMaximumSize(QSize(40, 40))
-        self.pushButton.setStyleSheet(u"border: none")
+        self.delete_button = QPushButton(self.TrackCard)
+        self.delete_button.setObjectName(u"delete_button")
+        self.delete_button.setMaximumSize(QSize(40, 40))
+        self.delete_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.delete_button.setStyleSheet(u"border: none;\n"
+"opacity: 50%")
         icon = QIcon()
-        icon.addFile(u":/icons/icons/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon)
-        self.pushButton.setIconSize(QSize(20, 20))
-        self.pushButton.setFlat(True)
+        icon.addFile(u":/icons/icons/trash-2.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.delete_button.setIcon(icon)
+        self.delete_button.setIconSize(QSize(20, 20))
+        self.delete_button.setFlat(True)
 
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.horizontalLayout_2.addWidget(self.delete_button, 0, Qt.AlignmentFlag.AlignVCenter)
 
 
-        self.retranslateUi(TrackCard)
+        self.verticalLayout_2.addWidget(self.TrackCard, 0, Qt.AlignmentFlag.AlignVCenter)
 
-        QMetaObject.connectSlotsByName(TrackCard)
+
+        self.retranslateUi(TrackCardWrapper)
+
+        QMetaObject.connectSlotsByName(TrackCardWrapper)
     # setupUi
 
-    def retranslateUi(self, TrackCard):
-        TrackCard.setWindowTitle(QCoreApplication.translate("TrackCard", u"Form", None))
+    def retranslateUi(self, TrackCardWrapper):
+        TrackCardWrapper.setWindowTitle(QCoreApplication.translate("TrackCardWrapper", u"Form", None))
         self.trackImage.setText("")
-        self.title.setText(QCoreApplication.translate("TrackCard", u"\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f", None))
-        self.author.setText(QCoreApplication.translate("TrackCard", u"\u0410\u0432\u0442\u043e\u0440 \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d", None))
-        self.pushButton.setText("")
+        self.title.setText(QCoreApplication.translate("TrackCardWrapper", u"\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f", None))
+        self.artist.setText(QCoreApplication.translate("TrackCardWrapper", u"\u0410\u0432\u0442\u043e\u0440 \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d", None))
+        self.delete_button.setText("")
     # retranslateUi
 

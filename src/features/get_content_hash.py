@@ -1,6 +1,3 @@
-import subprocess
-
-import ffmpeg
 import hashlib
 
 

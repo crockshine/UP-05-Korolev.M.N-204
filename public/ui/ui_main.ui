@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1491</width>
-    <height>734</height>
+    <width>636</width>
+    <height>666</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -96,7 +96,7 @@
          <property name="styleSheet">
           <string notr="true">background: rgba(255,255,255,150);</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
           <property name="spacing">
            <number>20</number>
           </property>
@@ -136,6 +136,9 @@
              <string notr="true">background: transparent</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="topMargin">
               <number>10</number>
              </property>
@@ -211,7 +214,8 @@ border: none;</string>
              <bool>false</bool>
             </property>
             <property name="styleSheet">
-             <string notr="true">background: transparent</string>
+             <string notr="true">background: transparent;
+</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
@@ -229,7 +233,7 @@ border: none;</string>
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+             <item>
               <widget class="QLabel" name="imageLabel">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -278,11 +282,12 @@ border: none;</string>
              <item>
               <widget class="QWidget" name="infoGroup" native="true">
                <property name="styleSheet">
-                <string notr="true">background: none</string>
+                <string notr="true">background: none;
+color: black</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_8">
                 <property name="spacing">
-                 <number>2</number>
+                 <number>4</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -300,7 +305,7 @@ border: none;</string>
                  <widget class="QLabel" name="titleLabel">
                   <property name="font">
                    <font>
-                    <pointsize>16</pointsize>
+                    <pointsize>18</pointsize>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -317,7 +322,7 @@ border: none;</string>
                    <number>1</number>
                   </property>
                   <property name="text">
-                   <string>Summertime Sudness</string>
+                   <string>Summertime Sadness</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -331,14 +336,14 @@ border: none;</string>
                  <widget class="QLabel" name="authorLabel">
                   <property name="font">
                    <font>
-                    <pointsize>12</pointsize>
+                    <pointsize>16</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color: transparent</string>
                   </property>
                   <property name="text">
-                   <string>Laba Del Ray</string>
+                   <string>Lana Del Ray</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -369,6 +374,9 @@ border: none;</string>
              <string notr="true">background-color: white</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -681,8 +689,8 @@ QSlider::handle:horizontal {
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>725</width>
-            <height>669</height>
+            <width>298</width>
+            <height>601</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -702,7 +710,11 @@ QSlider::handle:horizontal {
             <number>0</number>
            </property>
            <item>
-            <layout class="QVBoxLayout" name="cardList"/>
+            <layout class="QVBoxLayout" name="cardList">
+             <property name="spacing">
+              <number>1</number>
+             </property>
+            </layout>
            </item>
           </layout>
          </widget>
