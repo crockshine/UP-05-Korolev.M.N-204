@@ -62,13 +62,13 @@ background: white
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="leftMargin">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="topMargin">
        <number>10</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="bottomMargin">
        <number>10</number>
@@ -83,14 +83,14 @@ background: white
         </property>
         <property name="minimumSize">
          <size>
-          <width>65</width>
-          <height>65</height>
+          <width>45</width>
+          <height>45</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>65</width>
-          <height>65</height>
+          <width>45</width>
+          <height>45</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -124,7 +124,8 @@ background: white
         <property name="styleSheet">
          <string notr="true">border: none;
 border-radius: 0;
-color: black</string>
+color: black;
+background: transparent;</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
@@ -207,7 +208,7 @@ color: black</string>
         </property>
         <property name="styleSheet">
          <string notr="true">border: none;
-opacity: 50%</string>
+background: transparent</string>
         </property>
         <property name="text">
          <string/>

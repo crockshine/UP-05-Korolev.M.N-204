@@ -29,7 +29,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -149,7 +149,7 @@
               <number>10</number>
              </property>
              <item alignment="Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignVCenter">
-              <widget class="QPushButton" name="showHideButton">
+              <widget class="QPushButton" name="show_hidden_button">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                  <horstretch>0</horstretch>
@@ -234,7 +234,7 @@ border: none;</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="imageLabel">
+              <widget class="QLabel" name="image">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>30</horstretch>
@@ -302,7 +302,7 @@ color: black</string>
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QLabel" name="titleLabel">
+                 <widget class="QLabel" name="title">
                   <property name="font">
                    <font>
                     <pointsize>18</pointsize>
@@ -322,7 +322,7 @@ color: black</string>
                    <number>1</number>
                   </property>
                   <property name="text">
-                   <string>Summertime Sadness</string>
+                   <string>Без названия</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -333,7 +333,7 @@ color: black</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="authorLabel">
+                 <widget class="QLabel" name="artist">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -343,7 +343,7 @@ color: black</string>
                    <string notr="true">background-color: transparent</string>
                   </property>
                   <property name="text">
-                   <string>Lana Del Ray</string>
+                   <string>Автор не указан</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -659,13 +659,13 @@ QSlider::handle:horizontal {
         <number>5</number>
        </property>
        <property name="leftMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>10</number>
        </property>
        <property name="rightMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
         <number>10</number>
@@ -689,7 +689,7 @@ QSlider::handle:horizontal {
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>298</width>
+            <width>250</width>
             <height>601</height>
            </rect>
           </property>
@@ -751,7 +751,7 @@ QSlider::handle:horizontal {
             </property>
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <pointsize>14</pointsize>
               <bold>true</bold>
              </font>
             </property>

@@ -26,12 +26,11 @@ def extract_metadata(filepath: str) -> dict | None:
     try:
         if filetype == 'mp3':
             audio = ID3(filepath)
-
             metadata['title'] = audio.get('TIT2', [default_title])[0]
             _artist = audio.get('TPE1', [default_artist])
             metadata['artist'] = ', '.join(_artist)
 
-            for key in audio:
+            for key in audio.keys():
                 if key.startswith('APIC'):
                     metadata['cover'] = audio[key].data
                     break
@@ -65,12 +64,13 @@ def extract_metadata(filepath: str) -> dict | None:
                 metadata['title'] = audio.tags.get('TITL', [None])[0]
                 metadata['artist'] = audio.tags.get('IART', [None])
 
-            for key in audio:
+            for key in audio.keys():
                 if key.startswith('APIC'):
                     metadata['cover'] = audio[key].data
                     break
 
     except Exception as e:
+        print(e)
         return metadata
 
     return metadata

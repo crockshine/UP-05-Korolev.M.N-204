@@ -19,7 +19,6 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QPushButton,
     QSizePolicy, QVBoxLayout, QWidget)
 from public.resources import res_rc
 
-
 class Ui_TrackCardWrapper(object):
     def setupUi(self, TrackCardWrapper):
         if not TrackCardWrapper.objectName():
@@ -41,7 +40,7 @@ class Ui_TrackCardWrapper(object):
 "")
         self.horizontalLayout_2 = QHBoxLayout(self.TrackCard)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(0, 10, 0, 10)
+        self.horizontalLayout_2.setContentsMargins(5, 10, 5, 10)
         self.trackImage = QLabel(self.TrackCard)
         self.trackImage.setObjectName(u"trackImage")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -49,8 +48,8 @@ class Ui_TrackCardWrapper(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.trackImage.sizePolicy().hasHeightForWidth())
         self.trackImage.setSizePolicy(sizePolicy)
-        self.trackImage.setMinimumSize(QSize(65, 65))
-        self.trackImage.setMaximumSize(QSize(65, 65))
+        self.trackImage.setMinimumSize(QSize(45, 45))
+        self.trackImage.setMaximumSize(QSize(45, 45))
         self.trackImage.setStyleSheet(u"border: none")
         self.trackImage.setPixmap(QPixmap(u":/icons/icons/defaultImg.png"))
         self.trackImage.setScaledContents(True)
@@ -63,7 +62,8 @@ class Ui_TrackCardWrapper(object):
         self.infoBlock.setMaximumSize(QSize(16777215, 16777215))
         self.infoBlock.setStyleSheet(u"border: none;\n"
 "border-radius: 0;\n"
-"color: black")
+"color: black;\n"
+"background: transparent;")
         self.verticalLayout = QVBoxLayout(self.infoBlock)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -104,7 +104,7 @@ class Ui_TrackCardWrapper(object):
         self.delete_button.setMaximumSize(QSize(40, 40))
         self.delete_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.delete_button.setStyleSheet(u"border: none;\n"
-"opacity: 50%")
+"background: transparent")
         icon = QIcon()
         icon.addFile(u":/icons/icons/trash-2.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.delete_button.setIcon(icon)
