@@ -19,12 +19,14 @@ from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
     QMainWindow, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QVBoxLayout, QWidget)
 from public.resources import res_rc
+from src.classes.MainSection import MainSection
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(636, 666)
+        MainWindow.resize(771, 747)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -39,19 +41,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.mainSection = QWidget(self.centralwidget)
+
+        self.mainSection = MainSection(self.centralwidget)
         self.mainSection.setObjectName(u"mainSection")
         sizePolicy.setHeightForWidth(self.mainSection.sizePolicy().hasHeightForWidth())
         self.mainSection.setSizePolicy(sizePolicy)
         self.mainSection.setMinimumSize(QSize(0, 0))
-        self.mainSection.setStyleSheet(u"background: qlineargradient(\n"
-"    x1:0, y1:1, \n"
-"    x2:1, y2:0, \n"
-"    stop:0 #FF8080, \n"
-"	 stop:0.5 white,\n"
-" stop:0.5 white\n"
-"    stop:1 #72E4AB\n"
-");")
+
         self.verticalLayout = QVBoxLayout(self.mainSection)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -60,7 +56,7 @@ class Ui_MainWindow(object):
         self.whiteWrapper.setObjectName(u"whiteWrapper")
         sizePolicy.setHeightForWidth(self.whiteWrapper.sizePolicy().hasHeightForWidth())
         self.whiteWrapper.setSizePolicy(sizePolicy)
-        self.whiteWrapper.setStyleSheet(u"background: rgba(255,255,255,150);")
+        self.whiteWrapper.setStyleSheet(u"background: rgba(255,255,255,110);")
         self.verticalLayout_2 = QVBoxLayout(self.whiteWrapper)
         self.verticalLayout_2.setSpacing(20)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -126,6 +122,8 @@ class Ui_MainWindow(object):
         self.image.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.image.setAutoFillBackground(False)
         self.image.setStyleSheet(u"border-radius: 100")
+        self.image.setFrameShape(QFrame.Shape.NoFrame)
+        self.image.setFrameShadow(QFrame.Shadow.Plain)
         self.image.setPixmap(QPixmap(u":/icons/icons/defaultImg.png"))
         self.image.setScaledContents(True)
         self.image.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -330,7 +328,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4 = QVBoxLayout(self.playList)
         self.verticalLayout_4.setSpacing(5)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 10, 0, 10)
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 10)
         self.scrollArea = QScrollArea(self.playList)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setStyleSheet(u"border: none")
@@ -339,13 +337,13 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
         self.scrollAreaWidgetContents.setEnabled(True)
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 250, 601))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 270, 692))
         self.scrollAreaWidgetContents.setStyleSheet(u"border: none")
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.cardList = QVBoxLayout()
-        self.cardList.setSpacing(1)
+        self.cardList.setSpacing(0)
         self.cardList.setObjectName(u"cardList")
 
         self.verticalLayout_5.addLayout(self.cardList)
@@ -358,7 +356,7 @@ class Ui_MainWindow(object):
         self.buttonLayout.setObjectName(u"buttonLayout")
         self.verticalLayout_6 = QVBoxLayout(self.buttonLayout)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_6.setContentsMargins(10, 0, 10, 0)
         self.addTrackButton = QPushButton(self.buttonLayout)
         self.addTrackButton.setObjectName(u"addTrackButton")
         self.addTrackButton.setMinimumSize(QSize(250, 40))

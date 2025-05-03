@@ -1,11 +1,10 @@
 import os
 import sys
 import miniaudio
-from typing import Optional, Dict
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QMainWindow, QApplication,
-                               QFileDialog, QWidget)
+                               QFileDialog, )
 from PySide6.QtGui import QPixmap
 
 from public.ui_py import Ui_MainWindow
@@ -19,29 +18,30 @@ from src.features.prepare_image import prepare_image
 class AudioPlayer(QMainWindow):
     def __init__(self):
         super().__init__()
-        self._setup_variables()
-        self._setup_ui()
-        self._add_event_listeners()
-        self.render_card_list()
-
-    def _setup_variables(self):
+    # переменные
         self.db = HandleJSON('db.json')
-        self.current_track_hash = None
-        self._tracks_hash = set()
-        self._cards_cache = {}  # Кэш карточек для быстрого доступа
+        self.current_track_hash = None  # для аудио
+        self._cards_cache = {}  # {хэш: TrackCard}
 
         self.device = miniaudio.PlaybackDevice()
         self.stream = None
 
-    def _setup_ui(self):
+    # ui
         self.main_ui = Ui_MainWindow()
         self.main_ui.setupUi(self)
+
         self.main_ui.artist.setText('')
         self.main_ui.title.setText('')
+        self.main_ui.mainSection.update_image(QPixmap(':icons/icons/defaultGradient.png'))
         self.main_ui.cardList.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-    def _add_event_listeners(self):
+
+
+    # обработчики
         self.main_ui.addTrackButton.clicked.connect(self.add_track)
+
+    # первый рендер
+        self.render_card_list()
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
@@ -61,12 +61,86 @@ class AudioPlayer(QMainWindow):
             self._set_card_style(track_hash, True)
 
             self.device.stop()
-            self.stream = miniaudio.stream_file(track['source'])
+            self.stream = miniaudio.stream_file(track.get('source'))
             self.device.start(self.stream)
 
+
+
+    def add_track(self):
+        file_paths, _ = QFileDialog.getOpenFileNames(
+            self,
+            "Выберите аудиофайлы",
+            "",
+            "Аудиофайлы (*.mp3 *.ogg *.flac *.wav)"
+        )
+
+        if not file_paths:
+            return
+
+        _current_track_before = self.current_track_hash
+
+        for fp in file_paths:
+            audio_hash = get_content_hash(fp)
+            if audio_hash in self._cards_cache:
+                continue
+
+            metadata = extract_metadata(fp)
+            metadata.update({
+                'hash': audio_hash,
+                'source': fp
+            })
+            self.db.append(metadata)
+
+        self.render_card_list()
+
+        # восстановление выделения текущего трека
+        if _current_track_before and _current_track_before in self._cards_cache:
+            self._set_card_style(_current_track_before, True)
+
+    def delete_track(self, track_hash: str):
+        if self.current_track_hash == track_hash:
+            self.device.stop()
+            self.stream = None
+            self._update_main_ui(None)
+            self.current_track_hash = None
+
+        self.db.delete(track_hash)
+        self._cards_cache.pop(track_hash, None)
+        self.render_card_list()
+
+    def render_card_list(self):
+        self._cards_cache.clear()
+        self._clear_card_list()
+
+        for track in self.db.load():
+            if track['hash'] in self._cards_cache:
+                continue
+
+            card = TrackCard(
+                track_hash=track['hash'],
+                title=track['title'],
+                artist=track['artist'],
+                image=track['cover'],
+            )
+
+            card.on_delete.connect(self.delete_track)
+            card.on_play.connect(self.toggle_play)
+
+            self.main_ui.cardList.addWidget(card)
+            self._cards_cache[track['hash']] = card
+
+    def _clear_card_list(self):
+        while self.main_ui.cardList.count():
+            item = self.main_ui.cardList.takeAt(0)
+            if item and item.widget():
+                item.widget().deleteLater()
+
     def _update_main_ui(self, track: dict or None = None):
-        pixmap = QPixmap(prepare_image(track['cover']))
-        self.main_ui.image.setPixmap(pixmap)
+        _pixmap = QPixmap(
+            prepare_image(track['cover'] if track else None)
+        )
+        self.main_ui.mainSection.update_image(_pixmap if track else QPixmap(':icons/icons/defaultGradient.png'))
+        self.main_ui.image.setPixmap(_pixmap)
 
         self.main_ui.artist.setText(track.get('artist', 'Автор не найден') if track else '')
         self.main_ui.title.setText(track.get('title', 'Без названия') if track else '')
@@ -79,83 +153,10 @@ class AudioPlayer(QMainWindow):
         if track_hash in self._cards_cache:
             self._cards_cache[track_hash].set_playing_style(is_playing)
 
-    def add_track(self):
-        """Добавление новых треков"""
-        file_paths, _ = QFileDialog.getOpenFileNames(
-            self,
-            "Выберите аудиофайлы",
-            "",
-            "Аудиофайлы (*.mp3 *.ogg *.flac *.wav)"
-        )
-
-        if not file_paths:
-            return
-
-        current_track_before = self.current_track_hash
-
-        for fp in file_paths:
-            audio_hash = get_content_hash(fp)
-            if audio_hash in self._tracks_hash:
-                continue
-
-            metadata = extract_metadata(fp)
-            metadata.update({
-                'hash': audio_hash,
-                'source': fp
-            })
-            self.db.append(metadata)
-
-        self.render_card_list()
-
-        # Восстановление выделения текущего трека
-        if current_track_before and current_track_before in self._cards_cache:
-            self._set_card_style(current_track_before, True)
-
-    def delete_track(self, track_hash: str):
-        """Удаление трека"""
-        if self.current_track_hash == track_hash:
-            self.device.stop()
-            self.stream = None
-            self._update_main_ui(None)
-            self.current_track_hash = None
-
-        self.db.delete(track_hash)
-        self._cards_cache.pop(track_hash, None)
-        self.render_card_list()
-
-    def render_card_list(self):
-        """Отрисовка списка треков"""
-        self._tracks_hash = set()
-        self.clear_card_list()
-
-        for track in self.db.load():
-            if track['hash'] in self._tracks_hash:
-                continue
-
-            self._tracks_hash.add(track['hash'])
-
-            card = TrackCard(
-                track_hash=track['hash'],
-                title=track['title'],
-                artist=track['artist'],
-                image=track['cover'],
-            )
-            card.on_delete.connect(self.delete_track)
-            card.on_play.connect(self.toggle_play)
-
-            self.main_ui.cardList.addWidget(card)
-            self._cards_cache[track['hash']] = card
-
-    def clear_card_list(self):
-        """Очистка списка треков"""
-        while self.main_ui.cardList.count():
-            item = self.main_ui.cardList.takeAt(0)
-            if item and item.widget():
-                item.widget().deleteLater()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = AudioPlayer()
+    window.setWindowTitle('Музыкальный проигрыватель ')
     window.show()
     sys.exit(app.exec())

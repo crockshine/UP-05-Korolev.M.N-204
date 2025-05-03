@@ -2,7 +2,7 @@ import ast
 from PySide6.QtGui import QPixmap
 
 
-def prepare_image(img: str):
+def prepare_image(img: str or None):
     pixmap = QPixmap()
 
     try:

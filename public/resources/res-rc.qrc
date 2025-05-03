@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/defaultGradient.png</file>
     <file>icons/trash-2.svg</file>
     <file>icons/close.svg</file>
     <file>icons/cycle.svg</file>
