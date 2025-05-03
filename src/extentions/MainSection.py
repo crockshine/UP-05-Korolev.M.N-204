@@ -1,11 +1,8 @@
 from PySide6.QtGui import QPixmap, QPainter, Qt, QImage
 from PySide6.QtWidgets import QWidget, QGraphicsBlurEffect, QGraphicsScene, QGraphicsPixmapItem
 
-from src.features.prepare_image import prepare_image
 
-
-# Класс, который переопределяет стандартное заполнение заднего фона
-
+# Класс, который переопределяет стандартное заполнение заднего фона виджета mainSection
 class MainSection(QWidget):
     def __init__(self,
                  parent=None,
