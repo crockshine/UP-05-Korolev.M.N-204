@@ -3,6 +3,9 @@ venv/
 .env/
 .venv/
 
+# бдшка
+db.json
+
 # Файлы Python
 __pycache__/
 *.py[cod]
