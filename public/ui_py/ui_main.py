@@ -8,16 +8,19 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,
-                            QSize, Qt)
-from PySide6.QtGui import (QCursor,
-                           QFont, QIcon,
-                           QPixmap)
-from PySide6.QtWidgets import (QFrame, QHBoxLayout, QLabel,
-                               QPushButton, QScrollArea, QSizePolicy,
-                               QSlider, QVBoxLayout, QWidget)
-from src.extentions.MainSection import MainSection
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
+    QMainWindow, QPushButton, QScrollArea, QSizePolicy,
+    QSlider, QVBoxLayout, QWidget)
 
+from src.extentions.MainSection import MainSection
+from public.resources import res_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -201,6 +204,7 @@ class Ui_MainWindow(object):
 "    width: 0px;          /* \u0421\u043a\u0440\u044b\u0432\u0430\u0435\u043c \u043f\u043e\u043b\u0437\u0443\u043d\u043e\u043a */\n"
 "    margin: -8px 0;\n"
 "}")
+        self.timeline.setMaximum(100)
         self.timeline.setTracking(True)
         self.timeline.setOrientation(Qt.Orientation.Horizontal)
         self.timeline.setInvertedAppearance(False)
@@ -248,30 +252,30 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.prevButton_2)
 
-        self.playButton_2 = QPushButton(self.mainFeatureButtons)
-        self.playButton_2.setObjectName(u"playButton_2")
-        self.playButton_2.setEnabled(True)
+        self.play_pause_btn = QPushButton(self.mainFeatureButtons)
+        self.play_pause_btn.setObjectName(u"play_pause_btn")
+        self.play_pause_btn.setEnabled(True)
         sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         sizePolicy5.setHorizontalStretch(0)
         sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.playButton_2.sizePolicy().hasHeightForWidth())
-        self.playButton_2.setSizePolicy(sizePolicy5)
-        self.playButton_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.playButton_2.setMouseTracking(False)
-        self.playButton_2.setTabletTracking(False)
-        self.playButton_2.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.playButton_2.setAutoFillBackground(False)
-        self.playButton_2.setStyleSheet(u"QPushButton:pressed {\n"
+        sizePolicy5.setHeightForWidth(self.play_pause_btn.sizePolicy().hasHeightForWidth())
+        self.play_pause_btn.setSizePolicy(sizePolicy5)
+        self.play_pause_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.play_pause_btn.setMouseTracking(False)
+        self.play_pause_btn.setTabletTracking(False)
+        self.play_pause_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.play_pause_btn.setAutoFillBackground(False)
+        self.play_pause_btn.setStyleSheet(u"QPushButton:pressed {\n"
 "    border: none;            \n"
 "}")
         icon3 = QIcon()
         icon3.addFile(u":/icons/icons/play.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.playButton_2.setIcon(icon3)
-        self.playButton_2.setIconSize(QSize(20, 20))
-        self.playButton_2.setAutoDefault(False)
-        self.playButton_2.setFlat(True)
+        self.play_pause_btn.setIcon(icon3)
+        self.play_pause_btn.setIconSize(QSize(20, 20))
+        self.play_pause_btn.setAutoDefault(False)
+        self.play_pause_btn.setFlat(True)
 
-        self.horizontalLayout_4.addWidget(self.playButton_2)
+        self.horizontalLayout_4.addWidget(self.play_pause_btn)
 
         self.nextButton = QPushButton(self.mainFeatureButtons)
         self.nextButton.setObjectName(u"nextButton")
@@ -383,7 +387,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.playButton_2.setDefault(False)
+        self.play_pause_btn.setDefault(False)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -397,7 +401,7 @@ class Ui_MainWindow(object):
         self.artist.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0432\u0442\u043e\u0440 \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d", None))
         self.randomButton.setText("")
         self.prevButton_2.setText("")
-        self.playButton_2.setText("")
+        self.play_pause_btn.setText("")
         self.nextButton.setText("")
         self.pushButton.setText("")
         self.addTrackButton.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0442\u0440\u0435\u043a", None))

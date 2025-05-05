@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 
-class HandleJSON:
+class JSON:
     def __init__(self, path):
         self.path = Path(path)
         self.data = []

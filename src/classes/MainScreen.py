@@ -1,4 +1,4 @@
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QTransform, QIcon
 
 from src.features.prepare_image import prepare_image
 
@@ -7,17 +7,26 @@ class MainScreen:
     def __init__(self, audio_player):
         super().__init__()
         self.audio_player = audio_player
-        self.audio_player.interval.timeout.connect(self.update_progress_bar)
+
+        self.is_open_sidebar = True
+        self.audio_player.main_ui.show_hidden_button.clicked.connect(self.toggle_sidebar)
+
+        self.pixmap = self.audio_player.main_ui.show_hidden_button.icon().pixmap(32, 32)
+        self.rotated_pixmap = self.pixmap.transformed(QTransform().rotate(180))
+
+    def toggle_sidebar(self):
+        self.is_open_sidebar = not self.is_open_sidebar
+        self.audio_player.main_ui.playList.setVisible(self.is_open_sidebar)
+
+        if self.is_open_sidebar:
+            self.audio_player.main_ui.show_hidden_button.setIcon(QIcon(self.pixmap))
+        else:
+            self.audio_player.main_ui.show_hidden_button.setIcon(QIcon(self.rotated_pixmap))
 
 
-    def update_progress_bar(self):
-        return
-        # if not self.device: return
-        # _current_time = time.time()
-        # _progress = (_current_time - self.start_play_time - self.time_on_pause) / self.duration * 100
-        # self.main_ui.timeline.setValue(int(_progress))
-
-    def update_main_ui(self, track: dict or None = None):
+    def update_main_ui(self):
+        track = self.audio_player.current_track
+        print(track)
         _pixmap = QPixmap(
             prepare_image(track.get('cover') if track else None)
         )

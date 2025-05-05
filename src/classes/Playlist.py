@@ -2,7 +2,7 @@ import time
 
 from PySide6.QtWidgets import QWidget, QFileDialog
 
-from src.classes.HandleJSON import HandleJSON
+from src.classes.JSON import JSON
 from src.components.track_card import TrackCard
 from src.features.extract_metadata import extract_metadata
 from src.features.get_content_hash import get_content_hash
@@ -13,7 +13,7 @@ class Playlist:
         super().__init__()
         self.audio_player = audio_player
     # переменные
-        self.db = HandleJSON('db.json')
+        self.db = JSON('db.json')
         self._cards_cache = {}  # {хэш: TrackCard}
 
     # обработчики
@@ -25,7 +25,7 @@ class Playlist:
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
-        if self.audio_player.current_track_hash == track_hash:
+        if self.audio_player.current_track and self.audio_player.current_track.get('hash') == track_hash:
             if self.audio_player.device.running:
                 self.audio_player.pause()
             else:
@@ -40,9 +40,9 @@ class Playlist:
             if not _track_source:
                 return
 
-            self.audio_player.current_track_hash = track_hash
+            self.audio_player.current_track = track
             self.audio_player.update_stream(_track_source)
-            self.audio_player.main_screen.update_main_ui(track)
+            self.audio_player.main_screen.update_main_ui()
 
             self._reset_all_card_styles()
             self._set_card_style(track_hash, True)
@@ -75,7 +75,7 @@ class Playlist:
 
 
     def delete_track(self, track_hash: str):
-        if self.audio_player.current_track_hash == track_hash:
+        if self.audio_player.current_track.get('hash') == track_hash:
             self.audio_player.reset_stream()
 
         self.db.delete(track_hash)
@@ -83,9 +83,10 @@ class Playlist:
         self.render_card_list()
 
 
+
     def render_card_list(self):
         # восстановление стилей текущего трека
-        _current_track_before = self.audio_player.current_track_hash
+        _current_track_before = self.audio_player.current_track.get('hash') if self.audio_player.current_track else None
 
         self._cards_cache.clear()
         self._clear_card_list()

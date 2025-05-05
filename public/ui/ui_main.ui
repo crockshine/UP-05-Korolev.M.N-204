@@ -424,6 +424,9 @@ QSlider::handle:horizontal {
     margin: -8px 0;
 }</string>
                </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
                <property name="tracking">
                 <bool>true</bool>
                </property>
@@ -516,7 +519,7 @@ QSlider::handle:horizontal {
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="playButton_2">
+                    <widget class="QPushButton" name="play_pause_btn">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -785,7 +788,6 @@ QSlider::handle:horizontal {
   </widget>
  </widget>
  <resources>
-  <include location="../resources/res-rc.qrc"/>
   <include location="../resources/res-rc.qrc"/>
  </resources>
  <connections/>
