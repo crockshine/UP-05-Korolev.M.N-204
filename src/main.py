@@ -49,8 +49,8 @@ class AudioPlayer(QMainWindow):
 
         _before_state = self.device.running
 
-        self.device.stop()
         self.timeline.pause_timer()
+        self.device.stop()
 
         self.stream = miniaudio.stream_file(self.current_track.get('source'), seek_frame=position * 41000)
 

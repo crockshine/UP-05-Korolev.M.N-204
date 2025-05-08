@@ -204,12 +204,11 @@ class Ui_MainWindow(object):
 "    width: 0px;          /* \u0421\u043a\u0440\u044b\u0432\u0430\u0435\u043c \u043f\u043e\u043b\u0437\u0443\u043d\u043e\u043a */\n"
 "    margin: -8px 0;\n"
 "}")
-        self.timeline.setMaximum(100)
+        self.timeline.setMaximum(500)
         self.timeline.setTracking(True)
         self.timeline.setOrientation(Qt.Orientation.Horizontal)
         self.timeline.setInvertedAppearance(False)
         self.timeline.setInvertedControls(False)
-
         self.verticalLayout_3.addWidget(self.timeline)
 
         self.featureLayout = QWidget(self.featureBlock)

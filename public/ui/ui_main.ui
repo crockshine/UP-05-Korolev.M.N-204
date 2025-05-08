@@ -180,7 +180,8 @@ border-image: url(:/icons/icons/defaultImg.png);
                </property>
                <property name="styleSheet">
                 <string notr="true">background: rgba(255,255,255,150);
-border: none;</string>
+border: none;
+transform: rotate(90deg)</string>
                </property>
                <property name="text">
                 <string/>
