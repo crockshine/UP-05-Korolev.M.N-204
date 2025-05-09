@@ -1,6 +1,4 @@
 import miniaudio
-import time
-from PySide6.QtCore import QTimer
 
 from src.classes.ControlUnit import ControlUnit
 from src.classes.JSON import JSON
@@ -31,24 +29,24 @@ class AudioPlayer:
         self.control_unit = ControlUnit(self, main.main_ui)
 
 
-
     def prev(self):
-        index = find_index(self.db.data, self.current_track.get('hash'))
-
+        index = find_index(self.db.playlist_order, next(iter(self.current_track)))
         if index == -1:
             return
 
         if index == 0:
-            self.current_track = self.db.data[len(self.db.data) - 1]
+            self.current_track = \
+                {self.db.playlist_order[len(self.db.playlist_order) - 1]:
+                                      self.db.data[self.db.playlist_order[len(self.db.playlist_order) - 1]]}
         else:
-            self.current_track = self.db.data[index - 1]
+            self.current_track = \
+                {self.db.playlist_order[index - 1]: self.db.data[self.db.playlist_order[index - 1]]}
 
-        self.update_stream(self.current_track.get('source'))
+        self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
 
 
     def next(self, is_auto = True):
-        index = find_index(self.db.data, self.current_track.get('hash'))
-
+        index = find_index(self.db.playlist_order, next(iter(self.current_track)))
         if index == -1:
             return
 
@@ -57,8 +55,8 @@ class AudioPlayer:
         # трек не зацикливается?
         if self.settings.get('loop') != 'self':
             # трек последний?
-            if index == len(self.db.data) - 1:
-                self.current_track = self.db.data[0]
+            if index == len(self.db.playlist_order) - 1:
+                self.current_track = {self.db.playlist_order[0]: self.db.data[self.db.playlist_order[0]]}
 
                 # если нет зацикливания
                 if self.settings.get('loop') is None and is_auto:
@@ -67,9 +65,10 @@ class AudioPlayer:
                     _need_to_start = False
 
             else:
-                self.current_track = self.db.data[index + 1]
+                self.current_track = \
+                    {self.db.playlist_order[index + 1]:self.db.data[self.db.playlist_order[index + 1]]}
 
-        self.update_stream(self.current_track.get('source'), _need_to_start)
+        self.update_stream(self.current_track[next(iter(self.current_track))].get('source'), _need_to_start)
 
 
     def update_stream(self, source, need_to_start = True):
@@ -89,7 +88,7 @@ class AudioPlayer:
             self.timeline.start_timer(is_new=True)
             self.control_unit.update_ui_play_pause_button(False)
 
-        self.playlist.update_cards_styles(self.current_track.get('hash'))
+        self.playlist.update_cards_styles(next(iter(self.current_track)))
         self.main_screen.update_main_ui()
 
 
@@ -101,8 +100,9 @@ class AudioPlayer:
 
         self.device.stop()
 
+        _hsh = next(iter(self.current_track))
         self.stream = miniaudio.stream_file(
-            self.current_track.get('source'),
+            self.current_track[_hsh].get('source'),
             seek_frame=int(position_seconds * self.sample_rate)
         )
 

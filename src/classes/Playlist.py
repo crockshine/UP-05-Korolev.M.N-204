@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QFileDialog
 
-from src.classes.JSON import JSON
 from src.components.track_card import TrackCard
 from src.features.extract_metadata import extract_metadata
 from src.features.get_content_hash import get_content_hash
@@ -14,7 +13,6 @@ class Playlist:
 
     # переменные
         self.db = self.audio_player.db
-        self._cards_cache = {}  # {хэш: TrackCard}
 
     # обработчики
         self.main.addTrackButton.clicked.connect(self.add_track)
@@ -25,7 +23,7 @@ class Playlist:
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
-        if self.audio_player.current_track and self.audio_player.current_track.get('hash') == track_hash:
+        if self.audio_player.current_track and next(iter(self.audio_player.current_track)) == track_hash:
             if self.audio_player.device.running:
                 self.audio_player.pause()
             else:
@@ -36,7 +34,8 @@ class Playlist:
                 # сообщение об ошибке
                 return
 
-            _track_source = track.get('source', None)
+            _hsh = next(iter(track))
+            _track_source = track[_hsh].get('source', None)
             if not _track_source:
                 return
 
@@ -60,44 +59,38 @@ class Playlist:
 
         for fp in file_paths:
             audio_hash = get_content_hash(fp)
-            if audio_hash in self._cards_cache:
+            if audio_hash in self.db.data:
                 continue
 
             metadata = extract_metadata(fp)
             metadata.update({
-                'hash': audio_hash,
                 'source': fp
             })
-            self.db.append(metadata)
+            self.db.append({audio_hash: metadata})
 
         self.render_card_list()
 
 
     def delete_track(self, track_hash: str):
-        if self.audio_player.current_track.get('hash') == track_hash:
+        if next(iter(self.audio_player.current_track)) == track_hash:
             self.audio_player.reset_stream()
 
         self.db.delete(track_hash)
-        self._cards_cache.pop(track_hash, None)
         self.render_card_list()
-
 
 
     def render_card_list(self):
         # восстановление стилей текущего трека
-        _current_track_before = self.audio_player.current_track.get('hash') \
+        _current_track_before = next(iter(self.audio_player.current_track)) \
             if self.audio_player.current_track else None
 
-        self._cards_cache.clear()
         self._clear_card_list()
 
-        print(self.db.load())
-        for track in self.db.load():
-            if track['hash'] in self._cards_cache:
-                continue
-
+        _load_data = self.db.load()
+        for _track in _load_data:
+            track = _load_data[_track]
             card = TrackCard(
-                track_hash=track['hash'],
+                track_hash=_track,
                 title=track['title'],
                 artist=track['artist'],
                 image=track['cover'],
@@ -105,12 +98,11 @@ class Playlist:
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
 
-            self.main.cardList.addWidget(card)
-            self._cards_cache[track['hash']] = card
+            if _track == _current_track_before:
+                card.set_playing_style(True)
 
-        # восстановление выделения текущего трека
-        if _current_track_before and _current_track_before in self._cards_cache:
-            self.update_cards_styles(_current_track_before)
+            self.main.cardList.addWidget(card)
+
 
     def _clear_card_list(self):
         while self.main.cardList.count():
@@ -119,12 +111,9 @@ class Playlist:
                 item.widget().deleteLater()
 
     def update_cards_styles(self, track_hash: str):
-        # очистка
-        for card in self._cards_cache.values():
-            card.set_playing_style(False)
-
-        # применение
-        if track_hash in self._cards_cache:
-            self._cards_cache[track_hash].set_playing_style(True)
-
+        # Проходим по всем карточкам и обновляем стили
+        for i in range(self.main.cardList.count()):
+            widget = self.main.cardList.itemAt(i).widget()
+            if isinstance(widget, TrackCard):
+                widget.set_playing_style(widget.track_hash == track_hash)
 

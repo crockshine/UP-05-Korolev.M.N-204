@@ -65,13 +65,13 @@ background: white
        <number>5</number>
       </property>
       <property name="topMargin">
-       <number>10</number>
+       <number>5</number>
       </property>
       <property name="rightMargin">
        <number>5</number>
       </property>
       <property name="bottomMargin">
-       <number>10</number>
+       <number>5</number>
       </property>
       <item alignment="Qt::AlignmentFlag::AlignVCenter">
        <widget class="QLabel" name="trackImage">
@@ -83,14 +83,14 @@ background: white
         </property>
         <property name="minimumSize">
          <size>
-          <width>45</width>
-          <height>45</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>45</width>
-          <height>45</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -112,7 +112,7 @@ background: white
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>50</height>
+          <height>35</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -153,7 +153,7 @@ background: transparent;</string>
            </property>
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
              <bold>true</bold>
             </font>
            </property>
@@ -175,7 +175,7 @@ background: transparent;</string>
           <widget class="QLabel" name="artist">
            <property name="font">
             <font>
-             <pointsize>13</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
            <property name="styleSheet">

@@ -26,11 +26,16 @@ class MainScreen:
 
 
     def update_main_ui(self):
-        track = self.audio_player.current_track
-        _cover, _bg = prepare_image(track.get('cover') if track else None)
+        track_info = None
+
+        if self.audio_player.current_track:
+            _hsh = next(iter(self.audio_player.current_track))
+            track_info = self.audio_player.current_track[_hsh]
+
+        _cover, _bg = prepare_image(track_info.get('cover') if track_info else None)
 
         self.main.mainSection.update_image(_bg)
         self.main.image.setPixmap(_cover)
 
-        self.main.title.setText(track.get('title', 'Без названия') if track else '')
-        self.main.artist.setText(track.get('artist', 'Автор не найден') if track else '')
+        self.main.title.setText(track_info.get('title', 'Без названия') if track_info else '')
+        self.main.artist.setText(track_info.get('artist', 'Автор не найден') if track_info else '')

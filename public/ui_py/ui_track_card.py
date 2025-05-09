@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QPushButton,
     QSizePolicy, QVBoxLayout, QWidget)
 from public.resources import res_rc
 
+
 class Ui_TrackCardWrapper(object):
     def setupUi(self, TrackCardWrapper):
         if not TrackCardWrapper.objectName():
@@ -40,7 +41,7 @@ class Ui_TrackCardWrapper(object):
 "")
         self.horizontalLayout_2 = QHBoxLayout(self.TrackCard)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(5, 10, 5, 10)
+        self.horizontalLayout_2.setContentsMargins(5, 5, 5, 5)
         self.trackImage = QLabel(self.TrackCard)
         self.trackImage.setObjectName(u"trackImage")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -48,8 +49,8 @@ class Ui_TrackCardWrapper(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.trackImage.sizePolicy().hasHeightForWidth())
         self.trackImage.setSizePolicy(sizePolicy)
-        self.trackImage.setMinimumSize(QSize(45, 45))
-        self.trackImage.setMaximumSize(QSize(45, 45))
+        self.trackImage.setMinimumSize(QSize(40, 40))
+        self.trackImage.setMaximumSize(QSize(40, 40))
         self.trackImage.setStyleSheet(u"border: none")
         self.trackImage.setPixmap(QPixmap(u":/icons/icons/defaultImg.png"))
         self.trackImage.setScaledContents(True)
@@ -58,7 +59,7 @@ class Ui_TrackCardWrapper(object):
 
         self.infoBlock = QWidget(self.TrackCard)
         self.infoBlock.setObjectName(u"infoBlock")
-        self.infoBlock.setMinimumSize(QSize(0, 50))
+        self.infoBlock.setMinimumSize(QSize(0, 35))
         self.infoBlock.setMaximumSize(QSize(16777215, 16777215))
         self.infoBlock.setStyleSheet(u"border: none;\n"
 "border-radius: 0;\n"
@@ -76,7 +77,7 @@ class Ui_TrackCardWrapper(object):
         sizePolicy1.setHeightForWidth(self.title.sizePolicy().hasHeightForWidth())
         self.title.setSizePolicy(sizePolicy1)
         font = QFont()
-        font.setPointSize(16)
+        font.setPointSize(14)
         font.setBold(True)
         self.title.setFont(font)
         self.title.setStyleSheet(u"")
@@ -88,7 +89,7 @@ class Ui_TrackCardWrapper(object):
         self.artist = QLabel(self.infoBlock)
         self.artist.setObjectName(u"artist")
         font1 = QFont()
-        font1.setPointSize(13)
+        font1.setPointSize(12)
         self.artist.setFont(font1)
         self.artist.setStyleSheet(u"")
         self.artist.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
