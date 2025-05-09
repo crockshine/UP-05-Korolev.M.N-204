@@ -12,19 +12,20 @@ class JSON:
             with open(self.path, 'w'):
                 pass
 
-    # проверка, запись в жсон, очистка даты
+    # проверка, запись в жсон
     def _save(self):
         self._check_existence()
         with open(self.path, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=4, ensure_ascii=False, default=str)
-        self.data = []
 
-    # проверка, запись в дату
+    # загрузить
     def load(self):
         self._check_existence()
         with open(self.path, "r", encoding="utf-8") as f:
             try:
-                return json.load(f)
+                t = json.load(f)
+                print(t)
+                return t
             except json.decoder.JSONDecodeError:
                 return []
 

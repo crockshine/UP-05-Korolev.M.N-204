@@ -21,9 +21,9 @@ class TrackCard(QWidget):
         self.ui = Ui_TrackCardWrapper()
         self.ui.setupUi(self)
 
-        pixmap = prepare_image(image)
+        _cover, _ = prepare_image(image)
 
-        self.ui.trackImage.setPixmap(pixmap)
+        self.ui.trackImage.setPixmap(_cover)
         self.ui.title.setText(title)
         self.ui.artist.setText(artist)
 

@@ -3,12 +3,17 @@ from PySide6.QtGui import QPixmap
 
 
 def prepare_image(img: str or None):
-    pixmap = QPixmap()
+    cover = QPixmap()
+    bg = QPixmap()
 
     try:
-        pixmap.loadFromData(ast.literal_eval(img))
+        _img = ast.literal_eval(img)
+        cover.loadFromData(_img)
+        bg.loadFromData(_img)
     except Exception as e:
         print(e)
-        pixmap.load(':icons/icons/defaultImg.png')
+        cover.load(':icons/icons/defaultImg.png')
+        bg.load(':icons/icons/defaultGradient.png')
 
-    return pixmap
+
+    return [cover, bg]

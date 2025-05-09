@@ -18,9 +18,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
     QMainWindow, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QVBoxLayout, QWidget)
-
-from src.extentions.MainSection import MainSection
 from public.resources import res_rc
+from src.extentions.MainSection import MainSection
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -89,7 +89,8 @@ class Ui_MainWindow(object):
         self.show_hidden_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.show_hidden_button.setAutoFillBackground(False)
         self.show_hidden_button.setStyleSheet(u"background: rgba(255,255,255,150);\n"
-"border: none;")
+"border: none;\n"
+"transform: rotate(90deg)")
         icon = QIcon()
         icon.addFile(u":/icons/icons/showHide.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.show_hidden_button.setIcon(icon)
@@ -209,6 +210,7 @@ class Ui_MainWindow(object):
         self.timeline.setOrientation(Qt.Orientation.Horizontal)
         self.timeline.setInvertedAppearance(False)
         self.timeline.setInvertedControls(False)
+
         self.verticalLayout_3.addWidget(self.timeline)
 
         self.featureLayout = QWidget(self.featureBlock)
@@ -236,20 +238,20 @@ class Ui_MainWindow(object):
         self.mainFeatureButtons.setObjectName(u"mainFeatureButtons")
         self.horizontalLayout_4 = QHBoxLayout(self.mainFeatureButtons)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.prevButton_2 = QPushButton(self.mainFeatureButtons)
-        self.prevButton_2.setObjectName(u"prevButton_2")
-        self.prevButton_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.prevButton_2.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.prevButton_2.setStyleSheet(u"QPushButton:pressed {\n"
+        self.prevButton = QPushButton(self.mainFeatureButtons)
+        self.prevButton.setObjectName(u"prevButton")
+        self.prevButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.prevButton.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.prevButton.setStyleSheet(u"QPushButton:pressed {\n"
 "    border: none;            \n"
 "}")
         icon2 = QIcon()
         icon2.addFile(u":/icons/icons/prev.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.prevButton_2.setIcon(icon2)
-        self.prevButton_2.setIconSize(QSize(20, 20))
-        self.prevButton_2.setFlat(True)
+        self.prevButton.setIcon(icon2)
+        self.prevButton.setIconSize(QSize(20, 20))
+        self.prevButton.setFlat(True)
 
-        self.horizontalLayout_4.addWidget(self.prevButton_2)
+        self.horizontalLayout_4.addWidget(self.prevButton)
 
         self.play_pause_btn = QPushButton(self.mainFeatureButtons)
         self.play_pause_btn.setObjectName(u"play_pause_btn")
@@ -294,21 +296,21 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.mainFeatureButtons)
 
-        self.pushButton = QPushButton(self.featureLayout)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton.setTabletTracking(False)
-        self.pushButton.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.pushButton.setStyleSheet(u"QPushButton:pressed {\n"
+        self.cycleButton = QPushButton(self.featureLayout)
+        self.cycleButton.setObjectName(u"cycleButton")
+        self.cycleButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.cycleButton.setTabletTracking(False)
+        self.cycleButton.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.cycleButton.setStyleSheet(u"QPushButton:pressed {\n"
 "    border: none;            \n"
 "}")
         icon5 = QIcon()
         icon5.addFile(u":/icons/icons/cycle.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon5)
-        self.pushButton.setIconSize(QSize(20, 20))
-        self.pushButton.setFlat(True)
+        self.cycleButton.setIcon(icon5)
+        self.cycleButton.setIconSize(QSize(20, 20))
+        self.cycleButton.setFlat(True)
 
-        self.horizontalLayout_2.addWidget(self.pushButton)
+        self.horizontalLayout_2.addWidget(self.cycleButton)
 
 
         self.verticalLayout_3.addWidget(self.featureLayout, 0, Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignVCenter)
@@ -399,10 +401,10 @@ class Ui_MainWindow(object):
         self.title.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f", None))
         self.artist.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0432\u0442\u043e\u0440 \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d", None))
         self.randomButton.setText("")
-        self.prevButton_2.setText("")
+        self.prevButton.setText("")
         self.play_pause_btn.setText("")
         self.nextButton.setText("")
-        self.pushButton.setText("")
+        self.cycleButton.setText("")
         self.addTrackButton.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0442\u0440\u0435\u043a", None))
     # retranslateUi
 

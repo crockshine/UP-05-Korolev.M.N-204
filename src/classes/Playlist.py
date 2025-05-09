@@ -1,6 +1,4 @@
-import time
-
-from PySide6.QtWidgets import QWidget, QFileDialog
+from PySide6.QtWidgets import QFileDialog
 
 from src.classes.JSON import JSON
 from src.components.track_card import TrackCard
@@ -9,15 +7,17 @@ from src.features.get_content_hash import get_content_hash
 
 
 class Playlist:
-    def __init__(self, audio_player):
+    def __init__(self, audio_player, main):
         super().__init__()
         self.audio_player = audio_player
+        self.main = main
+
     # переменные
-        self.db = JSON('db.json')
+        self.db = self.audio_player.db
         self._cards_cache = {}  # {хэш: TrackCard}
 
     # обработчики
-        self.audio_player.main_ui.addTrackButton.clicked.connect(self.add_track)
+        self.main.addTrackButton.clicked.connect(self.add_track)
 
     # первый рендер
         self.render_card_list()
@@ -44,8 +44,7 @@ class Playlist:
             self.audio_player.update_stream(_track_source)
             self.audio_player.main_screen.update_main_ui()
 
-            self._reset_all_card_styles()
-            self._set_card_style(track_hash, True)
+            self.update_cards_styles(track_hash)
 
 
     def add_track(self):
@@ -86,11 +85,13 @@ class Playlist:
 
     def render_card_list(self):
         # восстановление стилей текущего трека
-        _current_track_before = self.audio_player.current_track.get('hash') if self.audio_player.current_track else None
+        _current_track_before = self.audio_player.current_track.get('hash') \
+            if self.audio_player.current_track else None
 
         self._cards_cache.clear()
         self._clear_card_list()
 
+        print(self.db.load())
         for track in self.db.load():
             if track['hash'] in self._cards_cache:
                 continue
@@ -101,27 +102,29 @@ class Playlist:
                 artist=track['artist'],
                 image=track['cover'],
             )
-
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
 
-            self.audio_player.main_ui.cardList.addWidget(card)
+            self.main.cardList.addWidget(card)
             self._cards_cache[track['hash']] = card
 
         # восстановление выделения текущего трека
         if _current_track_before and _current_track_before in self._cards_cache:
-            self._set_card_style(_current_track_before, True)
+            self.update_cards_styles(_current_track_before)
 
     def _clear_card_list(self):
-        while self.audio_player.main_ui.cardList.count():
-            item = self.audio_player.main_ui.cardList.takeAt(0)
+        while self.main.cardList.count():
+            item = self.main.cardList.takeAt(0)
             if item and item.widget():
                 item.widget().deleteLater()
 
-    def _reset_all_card_styles(self):
+    def update_cards_styles(self, track_hash: str):
+        # очистка
         for card in self._cards_cache.values():
             card.set_playing_style(False)
 
-    def _set_card_style(self, track_hash: str, is_playing: bool):
+        # применение
         if track_hash in self._cards_cache:
-            self._cards_cache[track_hash].set_playing_style(is_playing)
+            self._cards_cache[track_hash].set_playing_style(True)
+
+
