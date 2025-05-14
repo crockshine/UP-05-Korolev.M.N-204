@@ -11,8 +11,8 @@ class MainSection(QWidget):
 
         self.background = None
 
-        self.blur_radius = 10
-        self.scale_factor = 2
+        self.blur_radius = 50
+        self.scale_factor = 1
         self.cached_blur = None
 
     def update_image(self, pixmap):

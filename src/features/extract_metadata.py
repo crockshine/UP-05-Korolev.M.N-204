@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from mutagen import File
 from mutagen.flac import FLAC
@@ -14,13 +15,14 @@ def extract_metadata(filepath: str) -> dict | None:
     if not os.path.exists(filepath):
         return None
 
-    default_title = 'Без названия'
+    default_title = Path(filepath).stem
     default_artist = 'Автор не найден'
 
     metadata = {
         'title': default_title,
         'artist': default_artist,
-        'cover': None
+        'cover': None,
+        'source': filepath
     }
 
     try:
@@ -35,42 +37,41 @@ def extract_metadata(filepath: str) -> dict | None:
                     metadata['cover'] = audio[key].data
                     break
 
-        elif filetype == 'flac':
-            audio = FLAC(filepath)
-            print(audio, 'flac')
-
-            metadata['title'] = audio.get('title', [None])[0]
-            metadata['artist'] = audio.get('artist', [None])
-
-            if audio.pictures:
-                metadata['cover'] = audio.pictures[0].data
-
-        elif filetype == 'oggvorbis':
-            audio = OggVorbis(filepath)
-            print(audio, 'ogg')
-
-            metadata['title'] = audio.get('title', [None])[0]
-            metadata['artist'] = audio.get('artist', [None])
-
-            if 'metadata_block_picture' in audio:
-                import base64
-                metadata['cover'] = base64.b64decode(audio['metadata_block_picture'][0])
-
-        elif filetype == 'wave':
-            audio = WAVE(filepath)
-            print(audio, 'wave')
-
-            if audio.tags:
-                metadata['title'] = audio.tags.get('TITL', [None])[0]
-                metadata['artist'] = audio.tags.get('IART', [None])
-
-            for key in audio.keys():
-                if key.startswith('APIC'):
-                    metadata['cover'] = audio[key].data
-                    break
+        # elif filetype == 'flac':
+        #     audio = FLAC(filepath)
+        #     print(audio, 'flac')
+        #
+        #     metadata['title'] = audio.get('title', [None])[0]
+        #     metadata['artist'] = audio.get('artist', [None])
+        #
+        #     if audio.pictures:
+        #         metadata['cover'] = audio.pictures[0].data
+        #
+        # elif filetype == 'oggvorbis':
+        #     audio = OggVorbis(filepath)
+        #     print(audio, 'ogg')
+        #
+        #     metadata['title'] = audio.get('title', [None])[0]
+        #     metadata['artist'] = audio.get('artist', [None])
+        #
+        #     if 'metadata_block_picture' in audio:
+        #         import base64
+        #         metadata['cover'] = base64.b64decode(audio['metadata_block_picture'][0])
+        #
+        # elif filetype == 'wave':
+        #     audio = WAVE(filepath)
+        #     print(audio, 'wave')
+        #
+        #     if audio.tags:
+        #         metadata['title'] = audio.tags.get('TITL', [None])[0]
+        #         metadata['artist'] = audio.tags.get('IART', [None])
+        #
+        #     for key in audio.keys():
+        #         if key.startswith('APIC'):
+        #             metadata['cover'] = audio[key].data
+        #             break
 
     except Exception as e:
         print(e)
-        return metadata
 
     return metadata

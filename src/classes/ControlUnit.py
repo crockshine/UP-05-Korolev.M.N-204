@@ -17,6 +17,20 @@ class ControlUnit:
         self.main.cycleButton.clicked.connect(self.handle_cycle)
         self.main.cycleButton.setIcon(QIcon(":icons/icons/no-cycle.svg"))
 
+        self.main.randomButton.clicked.connect(self.handle_random)
+        self.main.randomButton.setIcon(QIcon(":icons/icons/no-random.svg"))
+
+    def handle_random(self):
+        is_random = self.settings.get('random')
+
+        if is_random:
+            self.settings['random'] = False
+            self.main.randomButton.setIcon(QIcon(":icons/icons/no-random.svg"))
+        else:
+            self.settings['random'] = True
+            self.main.randomButton.setIcon(QIcon(":icons/icons/random.svg"))
+
+        self.audio_player.random()
 
     def handle_cycle(self):
         loop = self.settings.get('loop')
@@ -34,11 +48,9 @@ class ControlUnit:
 
     def handle_play_pause(self):
         if self.audio_player.device.running:
-            self.update_ui_play_pause_button(True)
             self.audio_player.pause()
         else:
-            self.update_ui_play_pause_button(False)
-            self.audio_player.play()    
+            self.audio_player.play()
             
     def handle_next(self):
         self.audio_player.next(is_auto=False)

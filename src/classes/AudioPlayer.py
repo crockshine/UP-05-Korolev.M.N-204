@@ -1,3 +1,5 @@
+import random
+
 import miniaudio
 
 from src.classes.ControlUnit import ControlUnit
@@ -9,11 +11,25 @@ from src.classes.Timeline import Timeline
 from src.features.find_index import find_index
 
 
+# декоратор проверки наличия информации в бд
+def required_data(func):
+    def wrapper(self, *args, **kwargs):
+        if not self.db.data or not self.db.playlist_order:
+            self.main.timeline.setEnabled(False)
+            return
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
 class AudioPlayer:
     def __init__(self, main):
     # переменные
+        self.main = main.main_ui
+
         self.current_track = {}
         self.db = JSON('db.json')
+
         self.settings = Settings().settings
 
     # аудио поток
@@ -23,58 +39,75 @@ class AudioPlayer:
         self.sample_rate = 44100
 
     # классы
-        self.playlist = Playlist(self, main.main_ui)
-        self.main_screen = MainScreen(self, main.main_ui)
-        self.timeline = Timeline(self, main.main_ui)
-        self.control_unit = ControlUnit(self, main.main_ui)
+        self.main_screen = MainScreen(self, self.main)
+        self.timeline = Timeline(self,self.main)
+        self.control_unit = ControlUnit(self, self.main)
+        self.playlist = Playlist(self, self.main,  self.settings)
+
+        self.main.timeline.setEnabled(False)
 
 
+    def random(self):
+        if self.settings.get('random'):
+            self.db.shuffle(next(iter(self.current_track)))
+        else:
+            self.db.restore_order()
+
+    @required_data
     def prev(self):
+        if not self.current_track:
+            return
+
         index = find_index(self.db.playlist_order, next(iter(self.current_track)))
         if index == -1:
             return
 
         if index == 0:
-            self.current_track = \
-                {self.db.playlist_order[len(self.db.playlist_order) - 1]:
-                                      self.db.data[self.db.playlist_order[len(self.db.playlist_order) - 1]]}
+            new_track = self.db.get_track_by_hash(self.db.playlist_order[len(self.db.playlist_order) - 1])
+            self.current_track = new_track
         else:
-            self.current_track = \
-                {self.db.playlist_order[index - 1]: self.db.data[self.db.playlist_order[index - 1]]}
+            new_track = self.db.get_track_by_hash(self.db.playlist_order[index - 1])
+            self.current_track = new_track
 
         self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
 
 
+    @required_data
     def next(self, is_auto = True):
+        if not self.current_track:
+            return
+
         index = find_index(self.db.playlist_order, next(iter(self.current_track)))
         if index == -1:
             return
 
         _need_to_start = True
+        _loop = self.settings.get('loop')
 
-        # трек не зацикливается?
-        if self.settings.get('loop') != 'self':
-            # трек последний?
-            if index == len(self.db.playlist_order) - 1:
-                self.current_track = {self.db.playlist_order[0]: self.db.data[self.db.playlist_order[0]]}
+        # выборка, как зациклить
+        if index == len(self.db.playlist_order) - 1:
+            if not (_loop == 'self' and is_auto):
+                new_track = self.db.get_track_by_hash(self.db.playlist_order[0])
+                self.current_track = new_track
 
-                # если нет зацикливания
-                if self.settings.get('loop') is None and is_auto:
-                    self.pause()
-                    self.timeline.reset_timer()
-                    _need_to_start = False
+            if _loop is None and is_auto:
+                self.pause()
+                self.timeline.reset_timer()
+                _need_to_start = False
 
-            else:
-                self.current_track = \
-                    {self.db.playlist_order[index + 1]:self.db.data[self.db.playlist_order[index + 1]]}
+        else:
+            if not(_loop == 'self' and is_auto):
+                new_track = self.db.get_track_by_hash(self.db.playlist_order[index + 1])
+                self.current_track = new_track
 
         self.update_stream(self.current_track[next(iter(self.current_track))].get('source'), _need_to_start)
 
-
+    @required_data
     def update_stream(self, source, need_to_start = True):
+        self.main.timeline.setEnabled(True)
+
         if self.device.running:
             self.device.stop()
-
 
         file_info = miniaudio.get_file_info(source)
         self.duration = file_info.duration
@@ -91,11 +124,8 @@ class AudioPlayer:
         self.playlist.update_cards_styles(next(iter(self.current_track)))
         self.main_screen.update_main_ui()
 
-
+    @required_data
     def set_seek(self, position_seconds):
-        if not self.stream:
-            return
-
         was_playing = self.device.running
 
         self.device.stop()
@@ -109,6 +139,24 @@ class AudioPlayer:
         if was_playing:
             self.play()
 
+    @required_data
+    def pause(self):
+        if self.device.running:
+            self.device.stop()
+        self.timeline.pause_timer()
+        self.control_unit.update_ui_play_pause_button(True)
+
+    @required_data
+    def play(self):
+        if not self.current_track :
+            self.current_track = {self.db.playlist_order[0]: self.db.data[self.db.playlist_order[0]]}
+            self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
+            self.device.stop()
+
+        self.device.start(self.stream)
+        self.timeline.start_timer()
+        self.control_unit.update_ui_play_pause_button(False)
+
     def reset_stream(self):
         self.pause()
         self.timeline.reset_timer()
@@ -116,19 +164,3 @@ class AudioPlayer:
         self.stream = None
         self.duration = 0
         self.main_screen.update_main_ui()
-
-    def pause(self):
-        if self.device.running:
-            self.device.stop()
-        self.timeline.pause_timer()
-        self.control_unit.update_ui_play_pause_button(True)
-
-    def play(self):
-        if not self.stream:
-            if self.current_track:
-                self.update_stream(self.current_track.get('source'))
-            return
-
-        self.device.start(self.stream)
-        self.timeline.start_timer()
-        self.control_unit.update_ui_play_pause_button(False)

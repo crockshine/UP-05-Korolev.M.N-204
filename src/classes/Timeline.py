@@ -19,7 +19,9 @@ class Timeline:
         self.main.timeline.sliderReleased.connect(self.apply_seek)
         self.main.timeline.sliderPressed.connect(self.pause_timer) # для плавного UI
 
+
     def apply_seek(self):
+
         position = self.main.timeline.value()
         position_seconds = (position / 500) * self.audio_player.duration
         self.audio_player.set_seek(position_seconds)

@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QWidget
 
 from public.ui_py import Ui_TrackCardWrapper
 from src.features.prepare_image import prepare_image
+from src.features.trim_string import trim_string
 
 
 class TrackCard(QWidget):
@@ -24,8 +25,8 @@ class TrackCard(QWidget):
         _cover, _ = prepare_image(image)
 
         self.ui.trackImage.setPixmap(_cover)
-        self.ui.title.setText(title)
-        self.ui.artist.setText(artist)
+        self.ui.title.setText(trim_string(title))
+        self.ui.artist.setText(trim_string(artist))
 
         self.ui.delete_button.clicked.connect(lambda: self.on_delete.emit(track_hash))
 
