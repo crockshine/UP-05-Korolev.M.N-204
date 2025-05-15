@@ -1,28 +1,49 @@
 from time import sleep
 
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtGui import Qt
+from PySide6.QtWidgets import QFileDialog, QApplication
 
+from src.classes.ThreadLoading import ThreadLoading
 from src.components.track_card import TrackCard
 from src.features.extract_metadata import extract_metadata
 from src.features.get_content_hash import get_content_hash
+from PySide6.QtCore import QThread, Qt, QMetaObject, Q_ARG, Slot
 
 
 class Playlist:
     def __init__(self, audio_player, main, settings):
         super().__init__()
+    # переменные
         self.settings = settings
         self.audio_player = audio_player
         self.main = main
 
-    # переменные
         self.db = self.audio_player.db
 
     # обработчики
         self.main.addTrackButton.clicked.connect(self.add_track)
 
+    # доп. поток
+        self.thread_load = ThreadLoading(self.db)
+        self.thread_load.ready_track.connect(self.stream_render)
+
     # первый рендер
         self.render_card_list()
 
+    def stream_render(self, card_data):
+        _hsh = next(iter(card_data))
+        try:
+            card = TrackCard(
+                track_hash=_hsh,
+                title=card_data[_hsh]['title'],
+                artist=card_data[_hsh]['artist'],
+                image=card_data[_hsh]['cover']
+            )
+            card.on_delete.connect(self.delete_track)
+            card.on_play.connect(self.toggle_play)
+            self.main.cardList.addWidget(card)
+        except Exception as e:
+            print(f"Ошибка создания карточки: {e}")
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
@@ -62,16 +83,7 @@ class Playlist:
         if not file_paths:
             return
 
-        for fp in file_paths:
-            audio_hash = get_content_hash(fp)
-            if audio_hash in self.db.playlist_order:
-                continue
-
-            metadata = extract_metadata(fp)
-            self.db.append({audio_hash: metadata})
-
-        self.render_card_list()
-
+        self.thread_load.data_received.emit(file_paths)
 
     def delete_track(self, track_hash: str):
         if self.audio_player.current_track and next(iter(self.audio_player.current_track)) == track_hash:
