@@ -14,7 +14,6 @@ class MainWindow(QMainWindow):
     # первоначальный ui
         self.main_ui = Ui_MainWindow()
         self.main_ui.setupUi(self)
-
         self.main_ui.artist.setText('')
         self.main_ui.title.setText('')
         self.main_ui.mainSection.update_image(QPixmap(':icons/icons/defaultGradient.png'))

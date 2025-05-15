@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         sizePolicy3.setVerticalStretch(3)
         sizePolicy3.setHeightForWidth(self.image.sizePolicy().hasHeightForWidth())
         self.image.setSizePolicy(sizePolicy3)
-        self.image.setMinimumSize(QSize(0, 300))
+        self.image.setMinimumSize(QSize(300, 300))
         self.image.setMaximumSize(QSize(300, 300))
         self.image.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.image.setAutoFillBackground(False)

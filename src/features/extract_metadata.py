@@ -34,7 +34,7 @@ def extract_metadata(filepath: str) -> dict | None:
 
             for key in audio.keys():
                 if key.startswith('APIC'):
-                    metadata['cover'] = audio[key].data
+                    metadata['cover'] = str(audio[key].data)
                     break
 
         # elif filetype == 'flac':
