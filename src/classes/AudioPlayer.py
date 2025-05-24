@@ -1,5 +1,3 @@
-import random
-
 import miniaudio
 
 from src.classes.ControlUnit import ControlUnit
@@ -14,7 +12,7 @@ from src.features.find_index import find_index
 # декоратор проверки наличия информации в бд
 def required_data(func):
     def wrapper(self, *args, **kwargs):
-        if not self.db.data or not self.db.playlist_order:
+        if not self.db.playlist_order:
             self.main.timeline.setEnabled(False)
             return
         return func(self, *args, **kwargs)
@@ -36,23 +34,24 @@ class AudioPlayer:
         self.device = miniaudio.PlaybackDevice()
         self.stream = None
         self.duration = 0
-        self.sample_rate = 44100
 
     # классы
         self.main_screen = MainScreen(self, self.main)
         self.timeline = Timeline(self,self.main)
         self.control_unit = ControlUnit(self, self.main)
+
         self.playlist = Playlist(self, self.main,  self.settings)
 
         self.main.timeline.setEnabled(False)
 
-
+    # генерация случайного порядка
     def random(self):
         if self.settings.get('random'):
             self.db.shuffle(next(iter(self.current_track)))
         else:
             self.db.restore_order()
 
+    # предыдущий трек
     @required_data
     def prev(self):
         if not self.current_track:
@@ -71,7 +70,7 @@ class AudioPlayer:
 
         self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
 
-
+    # следующий трек
     @required_data
     def next(self, is_auto = True):
         if not self.current_track:
@@ -102,6 +101,7 @@ class AudioPlayer:
 
         self.update_stream(self.current_track[next(iter(self.current_track))].get('source'), _need_to_start)
 
+    # обновление потока воспроизведения (переключение трека)
     @required_data
     def update_stream(self, source, need_to_start = True):
         self.main.timeline.setEnabled(True)
@@ -111,8 +111,6 @@ class AudioPlayer:
 
         file_info = miniaudio.get_file_info(source)
         self.duration = file_info.duration
-        self.sample_rate = file_info.sample_rate
-
 
         self.stream = miniaudio.stream_file(source)
 
@@ -124,6 +122,7 @@ class AudioPlayer:
         self.playlist.update_cards_styles(next(iter(self.current_track)))
         self.main_screen.update_main_ui()
 
+    # установка перемотки
     @required_data
     def set_seek(self, position_seconds):
         was_playing = self.device.running
@@ -133,12 +132,13 @@ class AudioPlayer:
         _hsh = next(iter(self.current_track))
         self.stream = miniaudio.stream_file(
             self.current_track[_hsh].get('source'),
-            seek_frame=int(position_seconds * self.sample_rate)
+            seek_frame=int(position_seconds * 44100)
         )
 
         if was_playing:
             self.play()
 
+    # пауза
     @required_data
     def pause(self):
         if self.device.running:
@@ -146,10 +146,11 @@ class AudioPlayer:
         self.timeline.pause_timer()
         self.control_unit.update_ui_play_pause_button(True)
 
+    # воспроизвести
     @required_data
     def play(self):
         if not self.current_track :
-            self.current_track = {self.db.playlist_order[0]: self.db.data[self.db.playlist_order[0]]}
+            self.current_track = {self.db.playlist_order[0]: self.db.read()[self.db.playlist_order[0]]}
             self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
             self.device.stop()
 
@@ -157,6 +158,7 @@ class AudioPlayer:
         self.timeline.start_timer()
         self.control_unit.update_ui_play_pause_button(False)
 
+    # сброс всех значений
     def reset_stream(self):
         self.pause()
         self.timeline.reset_timer()

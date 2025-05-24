@@ -1,8 +1,8 @@
 import sys
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QMainWindow, QApplication)
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt, QRect
+from PySide6.QtWidgets import (QMainWindow, QApplication, QScrollArea, QWidget, QLabel)
+from PySide6.QtGui import QPixmap, QFont
 from public.ui_py import Ui_MainWindow
 from src.classes.AudioPlayer import AudioPlayer
 
@@ -10,6 +10,7 @@ from src.classes.AudioPlayer import AudioPlayer
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
 
     # первоначальный ui
         self.main_ui = Ui_MainWindow()
@@ -19,8 +20,11 @@ class MainWindow(QMainWindow):
         self.main_ui.mainSection.update_image(QPixmap(':icons/icons/defaultGradient.png'))
         self.main_ui.cardList.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-    # главный класс
+        # главный класс
         self.audio_player = AudioPlayer(self)
+
+
+
 
 
 if __name__ == "__main__":

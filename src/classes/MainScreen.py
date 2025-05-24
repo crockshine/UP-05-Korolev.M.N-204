@@ -1,4 +1,5 @@
 from PySide6.QtGui import QPixmap, QTransform, QIcon
+from PySide6.QtWidgets import QSizePolicy
 
 from src.features.prepare_image import prepare_image
 
@@ -39,3 +40,7 @@ class MainScreen:
 
         self.main.title.setText(track_info.get('title', 'Без названия') if track_info else '')
         self.main.artist.setText(track_info.get('artist', 'Автор не найден') if track_info else '')
+
+        self.main.title.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+
+    #
