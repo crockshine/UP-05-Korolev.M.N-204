@@ -1,13 +1,7 @@
-from time import sleep
-
-from PySide6.QtGui import Qt
-from PySide6.QtWidgets import QFileDialog, QApplication
-
+from PySide6.QtWidgets import QFileDialog
 from src.classes.ThreadLoading import ThreadLoading
 from src.components.track_card import TrackCard
-from src.features.extract_metadata import extract_metadata
-from src.features.get_content_hash import get_content_hash
-from PySide6.QtCore import QThread, Qt, QMetaObject, Q_ARG, Slot
+from PySide6.QtCore import Signal
 
 
 class Playlist:
@@ -17,7 +11,6 @@ class Playlist:
         self.settings = settings
         self.audio_player = audio_player
         self.main = main
-
         self.db = self.audio_player.db
 
     # обработчики
@@ -42,8 +35,9 @@ class Playlist:
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
             self.main.cardList.addWidget(card)
+            self.main.label.setText("")
         except Exception as e:
-            print(f"Ошибка создания карточки: {e}")
+            print(e)
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
@@ -100,7 +94,11 @@ class Playlist:
 
         self._clear_card_list()
 
-        _load_data = self.db.data
+        _load_data = self.db.read()
+        if not _load_data:
+            self.main.label.setText("Плейлист пуст")
+            return
+        self.main.label.setText("")
 
         for _hsh in _load_data:
             track = _load_data[_hsh]
