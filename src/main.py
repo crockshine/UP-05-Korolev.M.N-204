@@ -1,3 +1,4 @@
+import sqlite3
 import sys
 
 from PySide6.QtCore import Qt, QRect
@@ -10,7 +11,6 @@ from src.classes.AudioPlayer import AudioPlayer
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
 
     # первоначальный ui
         self.main_ui = Ui_MainWindow()

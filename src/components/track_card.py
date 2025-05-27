@@ -22,7 +22,7 @@ class TrackCard(QWidget):
         self.ui = Ui_TrackCardWrapper()
         self.ui.setupUi(self)
 
-        _cover, _ = prepare_image(image)
+        _cover, _ = prepare_image(image if image is not None else None)
 
         self.ui.trackImage.setPixmap(_cover)
         self.ui.title.setText(trim_string(title))

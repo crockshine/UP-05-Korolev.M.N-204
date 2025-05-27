@@ -1,3 +1,5 @@
+import time
+
 from PySide6.QtWidgets import QFileDialog
 from src.classes.ThreadLoading import ThreadLoading
 from src.components.track_card import TrackCard
@@ -32,38 +34,39 @@ class Playlist:
                 artist=card_data[_hsh]['artist'],
                 image=card_data[_hsh]['cover']
             )
+            self.main.cardList.addWidget(card)
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
-            self.main.cardList.addWidget(card)
             self.main.label.setText("")
         except Exception as e:
             print(e)
 
     def toggle_play(self, track_hash: str):
         # выбранный трек - текущий?
-        if self.audio_player.current_track and next(iter(self.audio_player.current_track)) == track_hash:
+        if (self.audio_player.current_track
+                and self.audio_player.current_track['hash'] == track_hash):
             if self.audio_player.device.running:
                 self.audio_player.pause()
             else:
                 self.audio_player.play()
         else:
             track = self.db.get_track_by_hash(track_hash)
+
             if track is None:
                 # сообщение об ошибке
                 return
 
-            _track_source = track[track_hash].get('source', None)
-            if _track_source is None:
-                # алгоритм поиска трека
+            if track["filepath"] is None:
+                # ошибка - не удалось найти трек
                 return
 
             if self.settings.get('random'):
                 self.db.shuffle(track_hash)
 
             self.audio_player.current_track = track
-            self.audio_player.update_stream(_track_source)
+            self.audio_player.update_stream(track["filepath"])
 
-            self.update_cards_styles(track_hash)
+            self.update_cards_styles(track["hash"])
 
 
     def add_track(self):
@@ -80,38 +83,46 @@ class Playlist:
         self.thread_load.data_received.emit(file_paths)
 
     def delete_track(self, track_hash: str):
-        if self.audio_player.current_track and next(iter(self.audio_player.current_track)) == track_hash:
+        if self.audio_player.current_track and self.audio_player.current_track['hash'] == track_hash:
             self.audio_player.reset_stream()
 
-        self.db.delete(track_hash)
-        self.render_card_list()
+        self.db.delete_track(track_hash)
+
+        for i in range(self.main.cardList.count()):
+            widget = self.main.cardList.itemAt(i).widget()
+            if isinstance(widget, TrackCard) and widget.track_hash == track_hash:
+                widget.deleteLater()
+                break
+
 
 
     def render_card_list(self):
         # восстановление стилей текущего трека
-        _current_track_hash_before = next(iter(self.audio_player.current_track)) \
+        _current_track_hash_before = self.audio_player.current_track['hash'] \
             if self.audio_player.current_track else None
 
         self._clear_card_list()
 
-        _load_data = self.db.read()
+        _load_data = self.db.get_all_tracks()
+
         if not _load_data:
             self.main.label.setText("Плейлист пуст")
             return
         self.main.label.setText("")
 
-        for _hsh in _load_data:
-            track = _load_data[_hsh]
+
+        for info in _load_data:
+            hash_, title, artist, cover, _ = info
             card = TrackCard(
-                track_hash=_hsh,
-                title = track['title'],
-                artist=track['artist'],
-                image=track['cover'],
+                track_hash=hash_,
+                title = title,
+                artist= artist,
+                image= cover,
             )
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
 
-            if _hsh == _current_track_hash_before:
+            if hash_ == _current_track_hash_before:
                 card.set_playing_style(True)
 
             self.main.cardList.addWidget(card)

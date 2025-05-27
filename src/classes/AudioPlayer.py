@@ -25,8 +25,8 @@ class AudioPlayer:
     # переменные
         self.main = main.main_ui
 
-        self.current_track = {}
-        self.db = JSON('db.json')
+        self.current_track = None
+        self.db = JSON()
 
         self.settings = Settings().settings
 
@@ -46,10 +46,10 @@ class AudioPlayer:
 
     # генерация случайного порядка
     def random(self):
-        if self.settings.get('random'):
-            self.db.shuffle(next(iter(self.current_track)))
+        if self.settings.get('random') and self.db.playlist_order:
+            self.db.shuffle(self.current_track['hash'] if self.current_track else None)
         else:
-            self.db.restore_order()
+            self.db.get_playlist_order()
 
     # предыдущий трек
     @required_data
@@ -57,7 +57,7 @@ class AudioPlayer:
         if not self.current_track:
             return
 
-        index = find_index(self.db.playlist_order, next(iter(self.current_track)))
+        index = find_index(self.db.playlist_order, self.current_track['hash'])
         if index == -1:
             return
 
@@ -68,7 +68,8 @@ class AudioPlayer:
             new_track = self.db.get_track_by_hash(self.db.playlist_order[index - 1])
             self.current_track = new_track
 
-        self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
+
+        self.update_stream(self.current_track['filepath'])
 
     # следующий трек
     @required_data
@@ -76,7 +77,7 @@ class AudioPlayer:
         if not self.current_track:
             return
 
-        index = find_index(self.db.playlist_order, next(iter(self.current_track)))
+        index = find_index(self.db.playlist_order, self.current_track['hash'])
         if index == -1:
             return
 
@@ -99,7 +100,7 @@ class AudioPlayer:
                 new_track = self.db.get_track_by_hash(self.db.playlist_order[index + 1])
                 self.current_track = new_track
 
-        self.update_stream(self.current_track[next(iter(self.current_track))].get('source'), _need_to_start)
+        self.update_stream(self.current_track['filepath'], _need_to_start)
 
     # обновление потока воспроизведения (переключение трека)
     @required_data
@@ -119,7 +120,7 @@ class AudioPlayer:
             self.timeline.start_timer(is_new=True)
             self.control_unit.update_ui_play_pause_button(False)
 
-        self.playlist.update_cards_styles(next(iter(self.current_track)))
+        self.playlist.update_cards_styles(self.current_track['hash'])
         self.main_screen.update_main_ui()
 
     # установка перемотки
@@ -129,9 +130,9 @@ class AudioPlayer:
 
         self.device.stop()
 
-        _hsh = next(iter(self.current_track))
+
         self.stream = miniaudio.stream_file(
-            self.current_track[_hsh].get('source'),
+            self.current_track['filepath'],
             seek_frame=int(position_seconds * 44100)
         )
 
@@ -150,8 +151,11 @@ class AudioPlayer:
     @required_data
     def play(self):
         if not self.current_track :
-            self.current_track = {self.db.playlist_order[0]: self.db.read()[self.db.playlist_order[0]]}
-            self.update_stream(self.current_track[next(iter(self.current_track))].get('source'))
+            track = self.db.get_track_by_hash(self.db.playlist_order[0])
+
+            self.current_track = track
+
+            self.update_stream(self.current_track['filepath'])
             self.device.stop()
 
         self.device.start(self.stream)

@@ -10,12 +10,10 @@ def prepare_image(img: str or None):
     cover = QPixmap()
     bg = QPixmap()
 
-    try:
-        _img = ast.literal_eval(img)
-        cover.loadFromData(_img)
-        bg.loadFromData(_img)
-    except Exception as e:
-        print(e)
+    if img is not None:
+        cover.loadFromData(img)
+        bg.loadFromData(img)
+    else:
         cover.load(':icons/icons/defaultImg.png')
         bg.load(':icons/icons/defaultGradient.png')
 

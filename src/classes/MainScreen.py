@@ -27,19 +27,18 @@ class MainScreen:
 
 
     def update_main_ui(self):
-        track_info = None
+        info = None
 
         if self.audio_player.current_track:
-            _hsh = next(iter(self.audio_player.current_track))
-            track_info = self.audio_player.current_track[_hsh]
+            info = self.audio_player.current_track
 
-        _cover, _bg = prepare_image(track_info.get('cover') if track_info else None)
+        _cover, _bg = prepare_image(info['cover'] if info else None)
 
         self.main.mainSection.update_image(_bg)
         self.main.image.setPixmap(_cover)
 
-        self.main.title.setText(track_info.get('title', 'Без названия') if track_info else '')
-        self.main.artist.setText(track_info.get('artist', 'Автор не найден') if track_info else '')
+        self.main.title.setText(info['title'] if info else '')
+        self.main.artist.setText(info['artist'] if info else '')
 
         self.main.title.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
 
