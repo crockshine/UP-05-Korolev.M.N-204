@@ -5,6 +5,7 @@ venv/
 
 # бдшка
 db.json
+music.db
 
 # Файлы Python
 __pycache__/
