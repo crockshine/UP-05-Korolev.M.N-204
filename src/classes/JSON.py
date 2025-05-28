@@ -54,7 +54,7 @@ class JSON:
         self.playlist_order.append(next(iter(data)))
 
     # удаление из жсон
-    def delete(self, track_hash):
+    def delete_track(self, track_hash):
         _temp = self.read()
 
         if track_hash in _temp and track_hash in self.playlist_order:

@@ -32,9 +32,11 @@ class Playlist:
                 artist=card_data[_hsh]['artist'],
                 image=card_data[_hsh]['cover']
             )
+
+            self.main.cardList.addWidget(card)
             card.on_delete.connect(self.delete_track)
             card.on_play.connect(self.toggle_play)
-            self.main.cardList.addWidget(card)
+
             self.main.label.setText("")
         except Exception as e:
             print(e)
@@ -83,8 +85,12 @@ class Playlist:
         if self.audio_player.current_track and next(iter(self.audio_player.current_track)) == track_hash:
             self.audio_player.reset_stream()
 
-        self.db.delete(track_hash)
-        self.render_card_list()
+        self.db.delete_track(track_hash)
+        for i in range(self.main.cardList.count()):
+            widget = self.main.cardList.itemAt(i).widget()
+            if isinstance(widget, TrackCard) and widget.track_hash == track_hash:
+                widget.deleteLater()
+                break
 
 
     def render_card_list(self):
