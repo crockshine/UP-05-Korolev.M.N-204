@@ -16,6 +16,7 @@ class MainScreen:
         self.pixmap = self.main.show_hidden_button.icon().pixmap(32, 32)
         self.rotated_pixmap = self.pixmap.transformed(QTransform().rotate(180))
 
+
     def toggle_sidebar(self):
         self.is_open_sidebar = not self.is_open_sidebar
         self.main.playList.setVisible(self.is_open_sidebar)
@@ -27,11 +28,7 @@ class MainScreen:
 
 
     def update_main_ui(self):
-        track_info = None
-
-        if self.audio_player.current_track:
-            _hsh = next(iter(self.audio_player.current_track))
-            track_info = self.audio_player.current_track[_hsh]
+        track_info = self.audio_player.current_track
 
         _cover, _bg = prepare_image(track_info.get('cover') if track_info else None)
 
@@ -42,5 +39,3 @@ class MainScreen:
         self.main.artist.setText(track_info.get('artist', 'Автор не найден') if track_info else '')
 
         self.main.title.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-
-    #

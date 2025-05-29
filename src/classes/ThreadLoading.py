@@ -1,6 +1,4 @@
 from PySide6.QtCore import QThread, Signal
-from time import sleep
-
 from src.features.extract_metadata import extract_metadata
 from src.features.get_content_hash import get_content_hash
 
@@ -17,17 +15,22 @@ class ThreadLoading(QThread):
         self.data_received.connect(self.add_files)
 
     def run(self):
-        for i, fp in enumerate(self.filepaths):
+        for fp in self.filepaths:
             audio_hash = get_content_hash(fp)
             if audio_hash in self.db.playlist_order:
                 continue
 
             metadata = extract_metadata(fp)
-            track = {audio_hash: metadata}
+
+            track = {
+                "hash": audio_hash,
+                "title": metadata["title"],
+                "artist": metadata["artist"],
+                "cover": metadata["cover"],
+                "source": fp
+            }
 
             self.ready_track.emit(track)
-            self.db.append(track)
-
 
     def add_files(self, filepaths):
         self.filepaths = filepaths
