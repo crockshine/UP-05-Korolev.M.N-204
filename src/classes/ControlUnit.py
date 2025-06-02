@@ -1,7 +1,9 @@
+from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 
 
-class ControlUnit:
+
+class ControlUnit(QObject):
     def __init__(self, audio_player, main):
         super().__init__()
         self.audio_player = audio_player
@@ -19,6 +21,8 @@ class ControlUnit:
 
         self.main.randomButton.clicked.connect(self.handle_random)
         self.main.randomButton.setIcon(QIcon(":icons/icons/no-random.svg"))
+
+
 
     def handle_random(self):
         is_random = self.settings.get('random')

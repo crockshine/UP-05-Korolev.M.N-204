@@ -4,17 +4,18 @@ from pathlib import Path
 
 from PySide6.QtCore import Signal, QObject
 
-from src.errors.JSONErorr import show_JSON_erorr_dialog
+from src.errors.Errors import Errors
 
 
 class JSON(QObject):
     on_clear = Signal()
 
-    def __init__(self, path):
+    def __init__(self, audio_player, path):
         super().__init__()
         self.path = Path(path)
         self.playlist_order = []
         self.restore_order()
+        self.audio_player = audio_player
 
     def _check_existence(self):
         if not self.path.exists():
@@ -38,7 +39,7 @@ class JSON(QObject):
                 else:
                     raise
             except (json.decoder.JSONDecodeError, Exception):
-                show_JSON_erorr_dialog()
+                self.audio_player.errors.show_JSON_erorr_dialog()
                 self.on_clear.emit()
                 return []
 

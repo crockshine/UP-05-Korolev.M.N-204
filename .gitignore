@@ -6,6 +6,9 @@ venv/
 # бдшка
 db.json
 
+# видое
+equalized.wav
+
 # Файлы Python
 __pycache__/
 *.py[cod]

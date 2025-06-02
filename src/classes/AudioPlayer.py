@@ -2,12 +2,13 @@ import os
 import miniaudio
 
 from src.classes.ControlUnit import ControlUnit
+from src.classes.Equalizer import Equalizer
 from src.classes.JSON import JSON
 from src.classes.MainScreen import MainScreen
 from src.classes.Playlist import Playlist
 from src.classes.Settings import Settings
 from src.classes.Timeline import Timeline
-from src.errors.CannotFindTrack import CannotFindTrack
+from src.errors.Errors import Errors
 from src.features.find_index import find_index
 from src.features.get_content_hash import get_content_hash
 
@@ -24,25 +25,41 @@ def required_data(func):
 
 class AudioPlayer:
     def __init__(self, main):
-
         self.main = main.main_ui
-        self.db = JSON('db.json')
+        self.db = JSON(self, 'db.json')
 
-        self.errors = CannotFindTrack(self.db)
         self.current_track = None
-        self.settings = Settings().settings
-
-        self.device = miniaudio.PlaybackDevice()
         self.stream = None
         self.duration = 0
+        self.device = miniaudio.PlaybackDevice()
 
+        self.is_equalized = False
+
+        self.equalizer = Equalizer(self)
+        self.settings = Settings().settings
+        self.errors = Errors(self.db)
         self.main_screen = MainScreen(self, self.main)
         self.timeline = Timeline(self, self.main)
         self.control_unit = ControlUnit(self, self.main)
         self.playlist = Playlist(self, self.main, self.settings, self.errors)
 
         self.main.timeline.setEnabled(False)
+        self.main.sound_settings.clicked.connect(self.equalizer.show_settings)
+
         self.db.on_clear.connect(self.full_reset)
+        self.equalizer.on_filtered.connect(self.apply_equalizer)
+        self.equalizer.on_reset.connect(self.reset_equalizer)
+
+
+
+    def apply_equalizer(self):
+        self.is_equalized = True
+        self.set_seek(self.timeline.total_time)
+
+    def reset_equalizer(self):
+        self.is_equalized = False
+        self.set_seek(self.timeline.total_time)
+
 
     def random(self):
         if self.settings.get('random') and self.current_track:
@@ -79,8 +96,7 @@ class AudioPlayer:
 
         _need_to_start = True
         _loop = self.settings.get('loop')
-
-        new_track = None
+        new_track = self.current_track
 
         if index == len(self.db.playlist_order) - 1:
             if not (_loop == 'self' and is_auto):
@@ -100,6 +116,7 @@ class AudioPlayer:
 
     @required_data
     def update_stream(self, new_track, need_to_start=True):
+
         source = new_track.get("source") if new_track else None
 
         if new_track is None:
@@ -108,13 +125,14 @@ class AudioPlayer:
         elif (
                 source is None
                 or not os.path.exists(source)
-                or get_content_hash(source) != new_track.get("hash", None)):
+                or get_content_hash(source) != new_track.get("hash", None)) :
 
             self.errors.show_cannot_find_dialog(
                 new_track.get("title", None),
                 new_track.get("hash", None)
             )
         else:
+            last_current = self.current_track
             self.current_track = new_track
             self.main.timeline.setEnabled(True)
 
@@ -123,6 +141,11 @@ class AudioPlayer:
 
             file_info = miniaudio.get_file_info(source)
             self.duration = file_info.duration
+
+            if self.is_equalized:
+                if last_current != self.current_track:
+                    self.equalizer.update_filters()
+                source = 'equalized.wav'
 
             self.stream = miniaudio.stream_file(source)
 
@@ -137,12 +160,20 @@ class AudioPlayer:
 
     @required_data
     def set_seek(self, position_seconds):
+        if self.current_track is None:
+            return
         was_playing = self.device.running
 
         self.device.stop()
 
+        source = self.current_track["source"]
+        if self.is_equalized:
+            if not os.path.exists('equalized.wav'):
+                self.equalizer.update_filters()
+            source = 'equalized.wav'
+
         self.stream = miniaudio.stream_file(
-            self.current_track["source"],
+            source,
             seek_frame=int(position_seconds * 44100)
         )
 

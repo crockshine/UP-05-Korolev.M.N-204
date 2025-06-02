@@ -8,11 +8,13 @@ class Timeline:
         self.audio_player = audio_player
         self.main = main
 
+
+
         self.timer = QTimer()
         self.timer.setInterval(100)
 
         self._last_update = 0
-        self._total_time = 0
+        self.total_time = 0
         self._is_paused = True
 
         self.timer.timeout.connect(self.update_position)
@@ -26,7 +28,7 @@ class Timeline:
         position_seconds = (position / 500) * self.audio_player.duration
         self.audio_player.set_seek(position_seconds)
 
-        self._total_time = position_seconds
+        self.total_time = position_seconds
         self._last_update = time.time()
 
         if not self._is_paused:
@@ -34,7 +36,7 @@ class Timeline:
 
     def start_timer(self, is_new=False):
         if is_new:
-            self._total_time = 0
+            self.total_time = 0
 
         self._last_update = time.time()
         self._is_paused = False
@@ -52,16 +54,15 @@ class Timeline:
             now = time.time()
             d = now - self._last_update
             self._last_update = now
-            self._total_time += d
+            self.total_time += d
 
-            current_time = min(self._total_time, self.audio_player.duration)
+            current_time = min(self.total_time, self.audio_player.duration)
             progress = int((current_time / self.audio_player.duration) * 500)
             self.main.timeline.setValue(min(500, max(0, progress)))
-
             if current_time >= self.audio_player.duration:
                 self.audio_player.next()
 
     def reset_timer(self):
         self.pause_timer()
-        self._total_time = 0
+        self.total_time = 0
         self.main.timeline.setValue(0)

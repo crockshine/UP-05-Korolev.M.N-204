@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/reset.svg</file>
+    <file>icons/sound_settings.svg</file>
     <file>icons/self-cycle.svg</file>
     <file>icons/no-cycle.svg</file>
     <file>icons/no-random.svg</file>

@@ -1,12 +1,11 @@
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QMessageBox, QFileDialog
 
-from src.classes.JSON import JSON
 
-class CannotFindTrack(QObject):
+class Errors(QObject):
     on_delete = Signal(str)
-    def __init__(self, db = None):
-        super(CannotFindTrack, self).__init__()
+    def __init__(self, db=None):
+        super().__init__()
         self.db = db
 
     def show_cannot_find_dialog(self, title, track_hash):
